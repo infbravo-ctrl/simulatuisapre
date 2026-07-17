@@ -51,8 +51,8 @@ header.top{display:flex;justify-content:space-between;align-items:center;max-wid
 .sello-oficial{display:inline-flex;gap:8px;align-items:center;margin-top:22px;background:var(--sello-bg);border:1px solid #E8D5AE;color:var(--sello);font-size:13px;padding:8px 14px;border-radius:6px;font-weight:600}
 .sello-oficial svg{flex:none}
 .puntos{margin-top:26px;display:grid;gap:10px;font-size:15px}
-.puntos li{list-style:none;display:flex;gap:10px;align-items:baseline}
-.puntos li::before{content:"—";color:var(--verde);font-weight:700}
+.puntos li{list-style:none;position:relative;padding-left:24px}
+.puntos li::before{content:"—";position:absolute;left:0;top:0;color:var(--verde);font-weight:700}
 
 /* ── Simulador (ficha) ── */
 .ficha{background:var(--ticket);border:1px solid var(--linea);border-radius:14px;box-shadow:0 18px 40px -22px rgba(18,46,49,.28);overflow:hidden}
@@ -125,8 +125,8 @@ input:focus,select:focus{border-color:var(--verde);outline:none}
 .asesoria h2{font-family:var(--disp);font-weight:650;font-size:clamp(24px,3.4vw,32px);color:#fff;line-height:1.15}
 .asesoria p{margin-top:12px;font-size:15.5px;color:#B9D2CA;max-width:52ch}
 .asesoria ul{margin-top:16px;display:grid;gap:8px;font-size:14.5px}
-.asesoria li{list-style:none;display:flex;gap:10px}
-.asesoria li::before{content:"✓";color:#7FD6BD;font-weight:700}
+.asesoria li{list-style:none;position:relative;padding-left:24px}
+.asesoria li::before{content:"✓";position:absolute;left:0;top:0;color:#7FD6BD;font-weight:700}
 .lead-form{background:#fff;border-radius:12px;padding:22px;color:var(--tinta)}
 .lead-form h3{font-size:17px;font-weight:700}
 .lead-form .sub-f{font-size:13px;color:var(--gris);margin-top:4px;margin-bottom:6px}
