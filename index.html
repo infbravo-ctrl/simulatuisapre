@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="es-CL">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Compara los 2.544 planes de isapre en comercialización | Datos oficiales Superintendencia de Salud</title>
+<meta name="description" content="Simulador independiente de planes de isapre en Chile. Compara Banmédica, Colmena, Consalud, Cruz Blanca, Nueva Masvida, Vida Tres y Esencial con datos oficiales de la Superintendencia de Salud (abril 2026). Sin registro para ver resultados.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,650&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --tinta:#122E31;        /* petróleo profundo: texto principal */
+  --papel:#F6FAF8;        /* blanco clínico */
+  --linea:#D4E2DC;        /* hairline verdoso */
+  --verde:#0E7B63;        /* acción / confianza */
+  --verde-osc:#0A5C4A;
+  --sello:#8A5A17;        /* ámbar sello oficial, uso mínimo */
+  --sello-bg:#FBF3E2;
+  --gris:#5A6E6A;
+  --ticket:#FFFFFF;
+  --mono:'IBM Plex Mono',ui-monospace,monospace;
+  --sans:'Public Sans',system-ui,sans-serif;
+  --disp:'Fraunces',serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
+body{font-family:var(--sans);background:var(--papel);color:var(--tinta);line-height:1.55;font-size:16px}
+a{color:var(--verde)}
+button{font-family:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--verde);outline-offset:2px;border-radius:4px}
+
+/* ── Barra de fuente oficial ── */
+.fuente-bar{background:var(--tinta);color:#DDEBE6;font-size:12.5px;padding:8px 16px;text-align:center;font-family:var(--mono)}
+.fuente-bar b{color:#fff;font-weight:500}
+.fuente-bar a{color:#9FD9C6;text-decoration:underline dotted}
+
+header.top{display:flex;justify-content:space-between;align-items:center;max-width:1080px;margin:0 auto;padding:18px 20px}
+.logo{font-family:var(--disp);font-weight:650;font-size:22px;letter-spacing:-.02em}
+.logo span{color:var(--verde)}
+.uf-hoy{font-family:var(--mono);font-size:12.5px;color:var(--gris);text-align:right}
+.uf-hoy b{color:var(--tinta);font-weight:600}
+
+/* ── Hero ── */
+.hero{max-width:1080px;margin:0 auto;padding:28px 20px 64px;display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start}
+@media(max-width:860px){.hero{grid-template-columns:1fr;gap:32px;padding-top:12px}}
+.hero h1{font-family:var(--disp);font-weight:650;font-size:clamp(30px,4.4vw,44px);line-height:1.12;letter-spacing:-.015em}
+.hero h1 em{font-style:normal;color:var(--verde)}
+.hero .sub{margin-top:16px;font-size:17px;color:var(--gris);max-width:44ch}
+.sello-oficial{display:inline-flex;gap:8px;align-items:center;margin-top:22px;background:var(--sello-bg);border:1px solid #E8D5AE;color:var(--sello);font-size:13px;padding:8px 14px;border-radius:6px;font-weight:600}
+.sello-oficial svg{flex:none}
+.puntos{margin-top:26px;display:grid;gap:10px;font-size:15px}
+.puntos li{list-style:none;display:flex;gap:10px;align-items:baseline}
+.puntos li::before{content:"—";color:var(--verde);font-weight:700}
+
+/* ── Simulador (ficha) ── */
+.ficha{background:var(--ticket);border:1px solid var(--linea);border-radius:14px;box-shadow:0 18px 40px -22px rgba(18,46,49,.28);overflow:hidden}
+.ficha-head{background:var(--tinta);color:#fff;padding:16px 22px;display:flex;justify-content:space-between;align-items:center}
+.ficha-head .t{font-weight:700;font-size:15px;letter-spacing:.02em}
+.ficha-head .folio{font-family:var(--mono);font-size:11.5px;color:#9FD9C6}
+.pasos{display:flex;gap:6px;padding:14px 22px 0}
+.paso-dot{height:4px;flex:1;background:var(--linea);border-radius:2px}
+.paso-dot.on{background:var(--verde)}
+.ficha-body{padding:20px 22px 24px}
+.ficha-body h2{font-size:18px;font-weight:700;margin-bottom:4px}
+.ficha-body .ayuda{font-size:13.5px;color:var(--gris);margin-bottom:16px}
+label.campo{display:block;font-size:13px;font-weight:600;margin:14px 0 6px}
+input[type=text],input[type=tel],input[type=email],select{width:100%;padding:12px 14px;border:1.5px solid var(--linea);border-radius:8px;font-size:16px;font-family:var(--sans);background:#fff;color:var(--tinta)}
+input:focus,select:focus{border-color:var(--verde);outline:none}
+.monto-input{position:relative}
+.monto-input .peso{position:absolute;left:14px;top:50%;transform:translateY(-50%);font-family:var(--mono);color:var(--gris)}
+.monto-input input{padding-left:32px;font-family:var(--mono);font-weight:500}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.chip{border:1.5px solid var(--linea);background:#fff;padding:9px 14px;border-radius:999px;font-size:14px;font-weight:600;color:var(--tinta)}
+.chip.on{background:var(--verde);border-color:var(--verde);color:#fff}
+.cargas-lista{display:flex;flex-direction:column;gap:8px;margin-top:8px}
+.carga-row{display:flex;gap:8px;align-items:center}
+.carga-row select{flex:1}
+.carga-row button{background:none;border:none;color:#B4443C;font-size:20px;line-height:1;padding:4px 8px}
+.btn{display:inline-flex;justify-content:center;align-items:center;gap:8px;width:100%;padding:14px 18px;border-radius:9px;border:none;font-size:16px;font-weight:700}
+.btn-verde{background:var(--verde);color:#fff}
+.btn-verde:hover{background:var(--verde-osc)}
+.btn-fantasma{background:none;color:var(--gris);border:1.5px solid var(--linea);width:auto;padding:10px 16px;font-size:14px}
+.nav-pasos{display:flex;gap:10px;margin-top:22px}
+.nav-pasos .btn-verde{flex:1}
+.mini-nota{font-size:12px;color:var(--gris);margin-top:12px;text-align:center}
+.calc-7{margin-top:10px;background:var(--papel);border:1px dashed var(--linea);border-radius:8px;padding:10px 14px;font-family:var(--mono);font-size:13px;color:var(--gris)}
+.calc-7 b{color:var(--verde-osc);font-weight:600}
+
+/* ── Resultados: tickets ── */
+#resultados{max-width:1080px;margin:0 auto;padding:8px 20px 60px;display:none}
+.res-head{margin:26px 0 6px}
+.res-head h2{font-family:var(--disp);font-weight:650;font-size:clamp(24px,3.4vw,32px)}
+.res-head p{color:var(--gris);font-size:15px;max-width:70ch;margin-top:6px}
+.res-meta{font-family:var(--mono);font-size:12.5px;color:var(--gris);margin-top:10px}
+.tickets{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:22px;margin-top:24px}
+.ticket{background:var(--ticket);border:1px solid var(--linea);border-radius:12px;position:relative;display:flex;flex-direction:column}
+.ticket.destacado{border-color:var(--verde);box-shadow:0 14px 34px -18px rgba(14,123,99,.4)}
+.ticket .badge-top{position:absolute;top:-11px;left:18px;background:var(--verde);color:#fff;font-size:11.5px;font-weight:700;padding:4px 12px;border-radius:999px;letter-spacing:.03em}
+.tk-head{padding:20px 20px 12px;border-bottom:1px dashed var(--linea)}
+.tk-isapre{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--gris)}
+.tk-plan{font-weight:700;font-size:16.5px;margin-top:3px;line-height:1.3}
+.tk-cod{font-family:var(--mono);font-size:11.5px;color:var(--gris);margin-top:3px}
+.tk-precio{padding:16px 20px;border-bottom:1px dashed var(--linea)}
+.tk-precio .clp{font-family:var(--mono);font-weight:600;font-size:28px;letter-spacing:-.01em}
+.tk-precio .clp small{font-size:14px;color:var(--gris);font-weight:400}
+.tk-precio .uf{font-family:var(--mono);font-size:12.5px;color:var(--gris);margin-top:2px}
+.tag-7{display:inline-block;margin-top:8px;font-size:11.5px;font-weight:700;padding:3px 10px;border-radius:999px}
+.tag-7.dentro{background:#E3F4EC;color:var(--verde-osc)}
+.tag-7.excede{background:#FBEFE3;color:#9A5B12}
+.tk-datos{padding:14px 20px;display:grid;grid-template-columns:1fr 1fr;gap:10px 14px;font-size:13px}
+.tk-datos .d b{display:block;font-family:var(--mono);font-size:15px;font-weight:600}
+.tk-datos .d span{color:var(--gris);font-size:11.5px}
+.tk-social{padding:0 20px 14px;font-size:12.5px;color:var(--gris)}
+.tk-social b{color:var(--tinta)}
+.tk-cta{margin-top:auto;padding:14px 20px 18px}
+.tk-cta .btn{font-size:15px;padding:12px}
+.ver-mas-wrap{text-align:center;margin-top:22px}
+
+/* ── Lead / asesoría ── */
+.asesoria{max-width:1080px;margin:0 auto 70px;padding:0 20px}
+.asesoria-card{background:var(--tinta);color:#EAF4F0;border-radius:16px;padding:clamp(28px,5vw,48px);display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center}
+@media(max-width:860px){.asesoria-card{grid-template-columns:1fr;gap:26px}}
+.asesoria h2{font-family:var(--disp);font-weight:650;font-size:clamp(24px,3.4vw,32px);color:#fff;line-height:1.15}
+.asesoria p{margin-top:12px;font-size:15.5px;color:#B9D2CA;max-width:52ch}
+.asesoria ul{margin-top:16px;display:grid;gap:8px;font-size:14.5px}
+.asesoria li{list-style:none;display:flex;gap:10px}
+.asesoria li::before{content:"✓";color:#7FD6BD;font-weight:700}
+.lead-form{background:#fff;border-radius:12px;padding:22px;color:var(--tinta)}
+.lead-form h3{font-size:17px;font-weight:700}
+.lead-form .sub-f{font-size:13px;color:var(--gris);margin-top:4px;margin-bottom:6px}
+.lead-form label.campo{margin-top:12px}
+.priv{font-size:11.5px;color:var(--gris);margin-top:10px;line-height:1.45}
+#leadOk{display:none;background:#E3F4EC;border:1px solid #BCE3D2;color:var(--verde-osc);padding:14px;border-radius:8px;font-size:14px;margin-top:12px;font-weight:600}
+
+/* ── Metodología / confianza ── */
+.metodo{max-width:1080px;margin:0 auto 70px;padding:0 20px}
+.metodo h2{font-family:var(--disp);font-weight:650;font-size:clamp(22px,3vw,28px);margin-bottom:16px}
+.metodo-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px}
+.m-card{background:#fff;border:1px solid var(--linea);border-radius:10px;padding:18px}
+.m-card .num{font-family:var(--mono);font-size:12px;color:var(--verde);font-weight:600}
+.m-card h3{font-size:15.5px;font-weight:700;margin:6px 0}
+.m-card p{font-size:13.5px;color:var(--gris)}
+.m-card a{font-size:13.5px}
+
+/* ── FAQ ── */
+.faq{max-width:760px;margin:0 auto 70px;padding:0 20px}
+.faq h2{font-family:var(--disp);font-weight:650;font-size:clamp(22px,3vw,28px);margin-bottom:14px}
+details{border-bottom:1px solid var(--linea);padding:14px 0}
+summary{font-weight:600;font-size:15.5px;cursor:pointer;list-style:none;display:flex;justify-content:space-between;gap:12px}
+summary::after{content:"+";font-family:var(--mono);color:var(--verde);font-size:18px}
+details[open] summary::after{content:"–"}
+details p{margin-top:10px;font-size:14.5px;color:var(--gris);max-width:66ch}
+
+footer{background:var(--tinta);color:#9DB8B0;font-size:12.5px;padding:26px 20px;line-height:1.7}
+footer .inner{max-width:1080px;margin:0 auto}
+footer a{color:#9FD9C6}
+.oculto{display:none!important}
+</style>
+</head>
+<body>
+
+<div class="fuente-bar">Fuente de datos: <b>Superintendencia de Salud</b> — Archivo Maestro de Planes Complementarios, <b class="periodo-dyn">…</b> · <a href="https://www.superdesalud.gob.cl/tax-biblioteca-digital/datos-abiertos-de-isapres-6988/" target="_blank" rel="noopener">verificar origen ↗</a></div>
+
+<header class="top">
+  <div class="logo">SimulaTu<span>Isapre</span><span style="color:var(--gris);font-size:13px;font-family:var(--sans);font-weight:500"> · isapres Chile</span></div>
+  <div class="uf-hoy"><span id="fechaHoy" style="display:block;color:var(--tinta);font-weight:500"></span><span id="ufLabel">UF hoy</span> · <b id="ufValor">cargando…</b></div>
+</header>
+
+<section class="hero">
+  <div>
+    <h1>Los <em id="nPlanes">2.544</em> planes de isapre en venta hoy, comparados con tu sueldo real.</h1>
+    <p class="sub">Sin registro, sin llamadas que no pediste. Ingresa tu renta y te mostramos al tiro qué planes puedes pagar con tu 7% — con los mismos datos que las isapres reportan por ley al regulador.</p>
+    <div class="sello-oficial">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1l2 2h3v3l2 2-2 2v3h-3l-2 2-2-2H3v-3L1 8l2-2V3h3l2-2z" fill="currentColor" opacity=".25"/><path d="M5.5 8.2l1.8 1.8 3.4-3.6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Datos oficiales, no publicidad de isapres
+    </div>
+    <ul class="puntos">
+      <li>Ves los resultados <b>antes</b> de dejar cualquier dato.</li>
+      <li>Precio estimado con la Tabla Única de Factores (Circular IF/N°343).</li>
+      <li>Las 7 isapres abiertas: Banmédica, Colmena, Consalud, Cruz Blanca, Nueva Masvida, Vida Tres y Esencial.</li>
+    </ul>
+  </div>
+
+  <!-- Simulador -->
+  <div class="ficha" id="simulador">
+    <div class="ficha-head">
+      <div class="t">Simulación de cotización</div>
+      <div class="folio" id="folio">FICHA Nº —</div>
+    </div>
+    <div class="pasos" aria-hidden="true">
+      <div class="paso-dot on" data-p="1"></div><div class="paso-dot" data-p="2"></div><div class="paso-dot" data-p="3"></div><div class="paso-dot" data-p="4"></div>
+    </div>
+
+    <!-- Paso 1: renta -->
+    <div class="ficha-body paso" data-paso="1">
+      <h2>¿Cuál es tu renta imponible?</h2>
+      <p class="ayuda">Es tu sueldo bruto mensual (antes de descuentos). Con eso calculamos tu 7% legal de salud.</p>
+      <label class="campo" for="renta">Renta imponible mensual</label>
+      <div class="monto-input"><span class="peso">$</span><input type="text" id="renta" inputmode="numeric" placeholder="1.200.000" autocomplete="off"></div>
+      <div class="calc-7" id="calc7">Tu 7% legal: <b>—</b></div>
+      <div class="nav-pasos"><button class="btn btn-verde" onclick="irPaso(2)">Continuar →</button></div>
+      <p class="mini-nota">No guardamos este dato: el cálculo ocurre en tu navegador.</p>
+    </div>
+
+    <!-- Paso 2: edad y cargas -->
+    <div class="ficha-body paso oculto" data-paso="2">
+      <h2>¿Quiénes entran al plan?</h2>
+      <p class="ayuda">La Tabla Única de Factores ajusta el precio según edad del titular y sus cargas. Ya no se discrimina por sexo.</p>
+      <label class="campo">Tu edad (titular)</label>
+      <div class="chips" id="edadTitular"></div>
+      <label class="campo">Cargas (cónyuge, hijos u otras)</label>
+      <div class="cargas-lista" id="cargasLista"></div>
+      <button class="btn btn-fantasma" style="margin-top:10px" onclick="agregarCarga()">+ Agregar carga</button>
+      <div class="nav-pasos"><button class="btn btn-fantasma" onclick="irPaso(1)">← Volver</button><button class="btn btn-verde" onclick="irPaso(3)">Continuar →</button></div>
+    </div>
+
+    <!-- Paso 3: región -->
+    <div class="ficha-body paso oculto" data-paso="3">
+      <h2>¿En qué región vives?</h2>
+      <p class="ayuda">Mostramos solo planes disponibles en tu región según lo declarado por cada isapre.</p>
+      <label class="campo" for="region">Región</label>
+      <select id="region"></select>
+      <div class="nav-pasos"><button class="btn btn-fantasma" onclick="irPaso(2)">← Volver</button><button class="btn btn-verde" onclick="irPaso(4)">Continuar →</button></div>
+    </div>
+
+    <!-- Paso 4: prioridad -->
+    <div class="ficha-body paso oculto" data-paso="4">
+      <h2>¿Qué te importa más?</h2>
+      <p class="ayuda">Con esto ordenamos los planes que calzan con tu presupuesto.</p>
+      <div class="chips" id="prioridad">
+        <button class="chip on" data-v="hosp">Mejor cobertura hospitalaria</button>
+        <button class="chip" data-v="amb">Mejor cobertura ambulatoria</button>
+        <button class="chip" data-v="precio">El menor precio posible</button>
+        <button class="chip" data-v="libre">Libre elección de médicos</button>
+      </div>
+      <div class="nav-pasos"><button class="btn btn-fantasma" onclick="irPaso(3)">← Volver</button><button class="btn btn-verde" id="btnCalcular" onclick="calcular()">Ver mis planes →</button></div>
+      <p class="mini-nota">Resultado inmediato. Sin correo, sin RUT, sin teléfono.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Resultados -->
+<section id="resultados" aria-live="polite">
+  <div class="res-head">
+    <h2>Tus mejores opciones</h2>
+    <p id="resSub"></p>
+    <div class="res-meta" id="resMeta"></div>
+  </div>
+  <div class="tickets" id="ticketsWrap"></div>
+  <div class="ver-mas-wrap"><button class="btn btn-fantasma" id="verMas" onclick="verMas()">Ver más planes que calzan</button></div>
+</section>
+
+<!-- Lead -->
+<section class="asesoria" id="asesoria">
+  <div class="asesoria-card">
+    <div>
+      <h2>El simulador te muestra el mapa. Un asesor te evita las letras chicas.</h2>
+      <p>El precio es solo una parte: prestadores en convenio, prima GES, carencias, topes por prestación y tu situación de salud cambian qué plan te conviene de verdad. Te contactamos por WhatsApp con un informe hecho a mano sobre tu caso.</p>
+      <ul>
+        <li>Asesoría gratuita y sin compromiso de contratar</li>
+        <li>Comparamos las 7 isapres, no trabajamos para ninguna</li>
+        <li>Te decimos también si te conviene quedarte donde estás</li>
+      </ul>
+    </div>
+    <form class="lead-form" id="leadForm" novalidate>
+      <h3>Recibe tu informe personalizado</h3>
+      <p class="sub-f">Respondemos dentro del día hábil.</p>
+      <label class="campo" for="leadNombre">Nombre</label>
+      <input type="text" id="leadNombre" autocomplete="name" required>
+      <label class="campo" for="leadFono">WhatsApp</label>
+      <input type="tel" id="leadFono" inputmode="tel" placeholder="+56 9 1234 5678" autocomplete="tel" required>
+      <label class="campo" for="leadMail">Correo (opcional)</label>
+      <input type="email" id="leadMail" autocomplete="email">
+      <div style="margin-top:16px"><button type="submit" class="btn btn-verde">Quiero mi informe gratis</button></div>
+      <div id="leadOk">¡Listo! Te escribimos por WhatsApp. Si prefieres, escríbenos tú directamente y llegas primero en la fila.</div>
+      <p class="priv">Usamos tus datos solo para contactarte por esta asesoría. No los vendemos ni los compartimos con isapres. Puedes pedir su eliminación cuando quieras (Ley 19.628).</p>
+    </form>
+  </div>
+</section>
+
+<!-- Metodología -->
+<section class="metodo" id="metodologia">
+  <h2>Cómo calculamos (y por qué puedes verificarlo)</h2>
+  <div class="metodo-grid">
+    <div class="m-card"><div class="num">01 · Origen</div><h3>Datos del regulador, no de las isapres</h3><p>Usamos el Archivo Maestro de Planes Complementarios que las isapres están obligadas a reportar a la Superintendencia de Salud. Corte: <span class="periodo-dyn">…</span>.</p><a href="https://www.superdesalud.gob.cl/tax-biblioteca-digital/datos-abiertos-de-isapres-6988/" target="_blank" rel="noopener">Descarga tú mismo el archivo ↗</a></div>
+    <div class="m-card"><div class="num">02 · Filtro</div><h3>Solo planes que hoy se venden</h3><p>De 57.170 planes registrados, filtramos los <b>en comercialización</b>, individuales, de las 7 isapres abiertas: <span id="nPlanes2">2.544</span> planes comparables.</p></div>
+    <div class="m-card"><div class="num">03 · Precio</div><h3>Tabla Única de Factores</h3><p>Precio estimado = precio base (UF) × suma de factores de tu grupo familiar, según la Circular IF/N°343, al valor UF del día. No incluye la prima GES, que cada isapre suma por beneficiario.</p></div>
+    <div class="m-card"><div class="num">04 · Límites</div><h3>Lo que este simulador no sabe</h3><p>Preexistencias, convenios vigentes con clínicas y promociones puntuales no están en los datos públicos. Por eso el precio es referencial y la asesoría humana existe.</p></div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq">
+  <h2>Preguntas frecuentes</h2>
+  <details><summary>¿Este sitio es de una isapre?</summary><p>No. Somos un comparador independiente. Ninguna isapre paga por aparecer mejor posicionada: el orden depende solo de tu presupuesto, tu región y la prioridad que elegiste.</p></details>
+  <details><summary>¿El precio que me muestran es el final?</summary><p>Es una estimación seria pero referencial: precio base oficial × Tabla Única de Factores × UF del día. Falta sumar la prima GES (la fija cada isapre por beneficiario) y confirmar condiciones al momento de contratar. El valor definitivo siempre lo confirma la isapre.</p></details>
+  <details><summary>¿Puedo pagar más que mi 7%?</summary><p>Sí. El 7% de tu renta imponible es lo mínimo legal; puedes pactar un plan más caro pagando la diferencia como cotización adicional voluntaria. Te marcamos qué planes caben en tu 7% y cuáles requieren adicional.</p></details>
+  <details><summary>¿Cambiarme de isapre tiene costo o trámite complicado?</summary><p>El traspaso no tiene costo y lo gestiona la nueva isapre. Ojo con las carencias y la declaración de salud: son justo el tipo de detalle que revisamos contigo en la asesoría gratuita.</p></details>
+  <details><summary>¿Qué hacen con mis datos?</summary><p>Tu renta y edades se procesan en tu navegador y no se envían a ningún servidor. Solo si pides asesoría guardamos tu nombre y contacto para responderte, según la Ley 19.628.</p></details>
+</section>
+
+<footer>
+  <div class="inner">
+    <b style="color:#fff">SimulaTuIsapre</b> es un servicio de asesoría previsional independiente. No somos una Institución de Salud Previsional ni estamos afiliados a ninguna. Los valores mostrados son estimaciones referenciales construidas desde datos públicos de la Superintendencia de Salud (<span class="periodo-dyn">…</span>) y no constituyen una oferta contractual. La contratación de un plan se realiza siempre a través de un agente de ventas registrado y la isapre respectiva.<br><br>
+    Datos: <a href="https://www.superdesalud.gob.cl/tax-biblioteca-digital/datos-abiertos-de-isapres-6988/" target="_blank" rel="noopener">Datos abiertos de Isapres — Superintendencia de Salud</a> · UF: mindicador.cl · © 2026
+  </div>
+</footer>
+
+<script src="planes_data.js"></script>
+<script>
+/* ═══════════ CONFIGURACIÓN (edita esto) ═══════════ */
+const CONFIG = {
+  whatsapp: '56926485029',            // número de contacto para leads (editable cuando quieras)
+  formspreeId: '',                    // ← opcional: ID de Formspree para respaldo por correo
+  ufFallback: 40844.79            // UF Banco Central al 11-07-2026; solo se usa si ambas APIs fallan
+};
+/* ══════════════════════════════════════════════════ */
+
+/* Tabla Única de Factores — Circular IF/N°343, Superintendencia de Salud */
+const TFU = [
+  {max:20, cot:0.6, car:0.6},
+  {max:25, cot:0.9, car:0.7},
+  {max:35, cot:1.0, car:0.7},
+  {max:45, cot:1.3, car:0.9},
+  {max:55, cot:1.4, car:1.0},
+  {max:65, cot:2.0, car:1.4},
+  {max:999,cot:2.4, car:2.2}
+];
+const TRAMOS = ['Menos de 20','20 a 24','25 a 34','35 a 44','45 a 54','55 a 64','65 o más'];
+const REGIONES = [
+  {i:15,n:'Arica y Parinacota'},{i:1,n:'Tarapacá'},{i:2,n:'Antofagasta'},{i:3,n:'Atacama'},
+  {i:4,n:'Coquimbo'},{i:5,n:'Valparaíso'},{i:13,n:'Metropolitana'},{i:6,n:"O'Higgins"},
+  {i:7,n:'Maule'},{i:16,n:'Ñuble'},{i:8,n:'Biobío'},{i:9,n:'Araucanía'},
+  {i:14,n:'Los Ríos'},{i:10,n:'Los Lagos'},{i:11,n:'Aysén'},{i:12,n:'Magallanes'}
+];
+
+let UF = CONFIG.ufFallback, estado = {renta:0, tramoTit:2, cargas:[], region:13, prio:'hosp'}, mostrados = 3, ranking = [];
+
+const $ = s => document.querySelector(s);
+const fmt = n => '$' + Math.round(n).toLocaleString('es-CL');
+
+/* Fecha y hora del día, en vivo (hora de Chile) */
+function tick(){
+  const ahora = new Date();
+  const f = new Intl.DateTimeFormat('es-CL',{weekday:'short',day:'numeric',month:'short',year:'numeric',timeZone:'America/Santiago'}).format(ahora);
+  const h = new Intl.DateTimeFormat('es-CL',{hour:'2-digit',minute:'2-digit',second:'2-digit',timeZone:'America/Santiago',hour12:false}).format(ahora);
+  $('#fechaHoy').textContent = `${f} · ${h} h`;
+}
+tick(); setInterval(tick, 1000);
+
+/* UF del día — doble fuente con respaldo */
+function pintarUF(fecha){
+  $('#ufValor').textContent = fmt(UF) + (fecha ? '' : ' (ref.)');
+  if(fecha){ const [y,m,d] = fecha.split('-'); $('#ufLabel').textContent = `UF al ${d}-${m}-${y}`; }
+  if(ranking.length) render();  // si ya había resultados, recalcula con la UF real
+}
+(async function cargarUF(){
+  try{
+    const d = await (await fetch('https://mindicador.cl/api/uf')).json();
+    if(d?.serie?.[0]?.valor > 10000){ UF = d.serie[0].valor; pintarUF(d.serie[0].fecha.slice(0,10)); return; }
+  }catch(e){}
+  try{
+    const d = await (await fetch('https://api.gael.cloud/general/public/monedas/UF')).json();
+    const v = parseFloat(String(d.Valor).replace(/\./g,'').replace(',','.'));
+    if(v > 10000){ UF = v; pintarUF(d.Fecha ? d.Fecha.slice(0,10) : null); return; }
+  }catch(e){}
+  pintarUF(null);
+})();
+
+/* Folio con fecha: refuerza la sensación de documento */
+$('#folio').textContent = 'FICHA Nº ' + new Date().toISOString().slice(0,10).replace(/-/g,'') + '-' + Math.floor(100+Math.random()*900);
+
+/* Nº de planes dinámico */
+document.addEventListener('DOMContentLoaded', ()=>{
+  const n = PLANES_DATA.planes.length.toLocaleString('es-CL');
+  $('#nPlanes').textContent = n; $('#nPlanes2').textContent = n;
+  document.querySelectorAll('.periodo-dyn').forEach(el=>el.textContent = PLANES_DATA.periodo);
+});
+
+/* Renta con puntos de miles */
+$('#renta').addEventListener('input', e=>{
+  const v = e.target.value.replace(/\D/g,'');
+  e.target.value = v ? Number(v).toLocaleString('es-CL') : '';
+  estado.renta = Number(v)||0;
+  $('#calc7').innerHTML = estado.renta
+    ? `Tu 7% legal: <b>${fmt(estado.renta*0.07)}</b> mensuales para salud`
+    : 'Tu 7% legal: <b>—</b>';
+});
+
+/* Chips edad titular */
+TRAMOS.forEach((t,ix)=>{
+  const b = document.createElement('button');
+  b.className = 'chip' + (ix===2?' on':''); b.textContent = t; b.type='button';
+  b.onclick = ()=>{ estado.tramoTit = ix; [...$('#edadTitular').children].forEach(c=>c.classList.remove('on')); b.classList.add('on'); };
+  $('#edadTitular').appendChild(b);
+});
+
+/* Cargas */
+function agregarCarga(){
+  const row = document.createElement('div'); row.className='carga-row';
+  const sel = document.createElement('select');
+  TRAMOS.forEach((t,ix)=>{ const o=document.createElement('option'); o.value=ix; o.textContent='Carga: '+t; sel.appendChild(o); });
+  const del = document.createElement('button'); del.type='button'; del.textContent='×'; del.setAttribute('aria-label','Quitar carga');
+  del.onclick = ()=> row.remove();
+  row.appendChild(sel); row.appendChild(del);
+  $('#cargasLista').appendChild(row);
+}
+
+/* Regiones */
+REGIONES.forEach(r=>{ const o=document.createElement('option'); o.value=r.i; o.textContent=r.n; if(r.i===13)o.selected=true; $('#region').appendChild(o); });
+
+/* Prioridad */
+$('#prioridad').addEventListener('click', e=>{
+  const b = e.target.closest('.chip'); if(!b) return;
+  estado.prio = b.dataset.v;
+  [...$('#prioridad').children].forEach(c=>c.classList.remove('on')); b.classList.add('on');
+});
+
+/* Navegación */
+function irPaso(n){
+  if(n===2 && (!estado.renta || estado.renta < 100000)){ $('#renta').focus(); $('#calc7').innerHTML='Ingresa tu renta para continuar (mínimo $100.000)'; return; }
+  document.querySelectorAll('.paso').forEach(p=>p.classList.toggle('oculto', p.dataset.paso != n));
+  document.querySelectorAll('.paso-dot').forEach(d=>d.classList.toggle('on', +d.dataset.p <= n));
+}
+
+/* Motor de comparación */
+function factorGrupo(){
+  let f = TFU[estado.tramoTit].cot;
+  document.querySelectorAll('#cargasLista select').forEach(s=>{ f += TFU[+s.value].car; });
+  return f;
+}
+function calcular(){
+  estado.region = +$('#region').value;
+  const f = factorGrupo(), tope7 = estado.renta*0.07;
+  const pos = estado.region - 1;
+  let lista = PLANES_DATA.planes
+    .filter(p => p.r[pos]==='S')
+    .map(p => {
+      const clp = p.pb * f * UF;
+      return {...p, clp, dentro: clp <= tope7*1.02};
+    })
+    .filter(p => p.clp <= tope7*1.6);   // margen 60% sobre el 7% para mostrar opciones con adicional razonable
+
+  const norm = (v,min,max)=> max>min ? (v-min)/(max-min) : 0;
+  const cMin = Math.min(...lista.map(p=>p.clp)), cMax = Math.max(...lista.map(p=>p.clp));
+  lista.forEach(p=>{
+    let s = 0;
+    if(estado.prio==='hosp')   s = p.ch*1.2 + p.ca*0.5;
+    if(estado.prio==='amb')    s = p.ca*1.2 + p.ch*0.5;
+    if(estado.prio==='precio') s = (1-norm(p.clp,cMin,cMax))*120 + (p.ch+p.ca)*0.25;
+    if(estado.prio==='libre')  s = (p.m==='L'?60:0) + p.ch*0.7 + p.ca*0.5;
+    s += p.dentro ? 18 : 0;
+    s += Math.min(Math.log10((p.z||0)+1)*6, 18);      // señal social: cotizantes vigentes reales
+    s -= norm(p.clp,cMin,cMax)*12;
+    p.score = s;
+  });
+  ranking = lista.sort((a,b)=>b.score-a.score);
+  mostrados = 3;
+  render();
+  $('#resultados').style.display='block';
+  $('#resultados').scrollIntoView({behavior:'smooth'});
+}
+function render(){
+  const w = $('#ticketsWrap'); w.innerHTML='';
+  const tope7 = estado.renta*0.07;
+  $('#resSub').textContent = `Con una renta de ${fmt(estado.renta)} tu 7% legal es ${fmt(tope7)}. Encontramos ${ranking.length.toLocaleString('es-CL')} planes que calzan en tu región; te mostramos los mejor evaluados según tu prioridad.`;
+  $('#resMeta').textContent = `Factor grupo familiar: ${factorGrupo().toFixed(2)} (TFU IF/343) · UF ${fmt(UF)} · Fuente: Superintendencia de Salud, ${PLANES_DATA.periodo} · Precios no incluyen prima GES`;
+  ranking.slice(0,mostrados).forEach((p,ix)=>{
+    const t = document.createElement('article');
+    t.className = 'ticket' + (ix===0?' destacado':'');
+    const mod = p.m==='L' ? 'Libre elección' : p.m==='C' ? 'Plan cerrado' : 'Prestador preferente';
+    t.innerHTML = `
+      ${ix===0?'<div class="badge-top">Mejor calce para ti</div>':''}
+      <div class="tk-head">
+        <div class="tk-isapre">${p.i}</div>
+        <div class="tk-plan">${p.n}</div>
+        <div class="tk-cod">Código Superintendencia: ${p.c}</div>
+      </div>
+      <div class="tk-precio">
+        <div class="clp">${fmt(p.clp)}<small> /mes aprox.</small></div>
+        <div class="uf">${p.pb.toFixed(2)} UF base × factor ${factorGrupo().toFixed(2)} · + prima GES</div>
+        <span class="tag-7 ${p.dentro?'dentro':'excede'}">${p.dentro ? 'Cabe en tu 7%' : 'Requiere adicional de ' + fmt(p.clp - tope7)}</span>
+      </div>
+      <div class="tk-datos">
+        <div class="d"><b>${p.ch}%</b><span>bonif. hospitalaria</span></div>
+        <div class="d"><b>${p.ca}%</b><span>bonif. ambulatoria</span></div>
+        <div class="d"><b>${p.t ? p.t.toLocaleString('es-CL')+' UF' : 'Sin tope'}</b><span>tope anual</span></div>
+        <div class="d"><b>${mod}</b><span>modalidad</span></div>
+      </div>
+      ${p.z>20 ? `<div class="tk-social"><b>${p.z.toLocaleString('es-CL')} personas</b> tienen este plan hoy (dato oficial)</div>`:''}
+      <div class="tk-cta"><button class="btn btn-verde" onclick="pedirInforme('${p.i} — ${p.n.replace(/'/g,'')}')">Me interesa este plan</button></div>`;
+    w.appendChild(t);
+  });
+  $('#verMas').style.display = mostrados < ranking.length ? 'inline-flex' : 'none';
+  if(!ranking.length){
+    w.innerHTML = '<p style="color:var(--gris)">Con ese presupuesto no encontramos planes individuales en tu región dentro de un rango razonable. Fonasa más un seguro complementario puede ser tu mejor opción — pide la asesoría gratuita y lo vemos contigo, sin costo.</p>';
+  }
+}
+function verMas(){ mostrados += 3; render(); }
+
+/* Lead */
+let planInteres = '';
+function pedirInforme(plan){
+  planInteres = plan;
+  $('#asesoria').scrollIntoView({behavior:'smooth'});
+  $('#leadNombre').focus({preventScroll:true});
+}
+$('#leadForm').addEventListener('submit', e=>{
+  e.preventDefault();
+  const nombre = $('#leadNombre').value.trim(), fono = $('#leadFono').value.trim(), mail = $('#leadMail').value.trim();
+  if(!nombre || fono.replace(/\D/g,'').length < 8){ alert('Revisa tu nombre y número de WhatsApp.'); return; }
+  const msg = `Hola, soy ${nombre}. Usé el simulador SimulaTuIsapre.cl.\n` +
+    `Renta: ${fmt(estado.renta)} · Grupo: titular ${TRAMOS[estado.tramoTit]}${document.querySelectorAll('#cargasLista select').length?' + '+document.querySelectorAll('#cargasLista select').length+' carga(s)':''} · Región: ${REGIONES.find(r=>r.i===estado.region)?.n||''}` +
+    (planInteres ? `\nMe interesó: ${planInteres}` : '') +
+    `\nQuiero mi informe personalizado gratis.`;
+  if(CONFIG.formspreeId){
+    fetch(`https://formspree.io/f/${CONFIG.formspreeId}`, {method:'POST', headers:{'Accept':'application/json','Content-Type':'application/json'},
+      body: JSON.stringify({nombre, whatsapp:fono, email:mail, plan:planInteres, renta:estado.renta})}).catch(()=>{});
+  }
+  window.open(`https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(msg)}`, '_blank');
+  $('#leadOk').style.display='block';
+});
+</script>
+</body>
+</html>

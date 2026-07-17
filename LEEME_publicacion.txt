@@ -1,0 +1,114 @@
+═══════════════════════════════════════════════════════════════
+  SIMULATUISAPRE — CHECKLIST DE PUBLICACIÓN
+  Orden exacto. Tiempo estimado total: 30-40 minutos.
+═══════════════════════════════════════════════════════════════
+
+ANTES DE SUBIR NADA (5 min) ─────────────────────────────────────
+
+[ ] 1. Abre index.html con un editor de texto (Bloc de notas sirve).
+       Busca "CONFIGURACIÓN" (cerca de la línea 315) y edita:
+
+       whatsapp: '56912345678'   ← PON TU NÚMERO REAL (sin +, sin espacios)
+
+       ⚠ Este paso es OBLIGATORIO. Si no lo haces, los leads le
+         escribirán a un número que no existe y perderás cada contacto.
+
+[ ] 2. (Opcional) formspreeId: crea cuenta gratis en formspree.io,
+       crea un formulario y pega el ID (ej: 'mqkvabcd'). Sirve como
+       respaldo por correo de cada lead. Puedes hacerlo después.
+
+[ ] 3. (Opcional) Si no te gusta "SimulaTuIsapre", reemplaza el nombre.
+       Aparece en: el logo del header, el footer y el título de la
+       pestaña. Buscar y reemplazar "SimulaTuIsapre".
+
+SUBIR A GITHUB (10 min) ────────────────────────────────────────
+
+[ ] 4. En github.com crea un repositorio nuevo, público.
+       Nombre sugerido: simulatuisapre (o tu marca).
+
+[ ] 5. Sube TODO el contenido de este ZIP respetando las carpetas:
+         index.html
+         planes_data.js
+         robots.txt
+         scripts/procesar_planes.py
+         .github/workflows/actualizar-planes.yml
+       ⚠ La carpeta .github a veces queda oculta al descomprimir en
+         Windows. Verifica en el repo que exista
+         .github/workflows/actualizar-planes.yml — sin ella no hay
+         actualización mensual automática.
+
+[ ] 6. Activa el sitio: Settings → Pages → Source: "Deploy from a
+       branch" → Branch: main / (root) → Save.
+       En 1-2 minutos tu sitio queda en https://TUUSUARIO.github.io/simulatuisapre/
+
+[ ] 7. Activa el robot mensual: Settings → Actions → General →
+       Workflow permissions → marca "Read and write permissions" → Save.
+
+[ ] 8. Pruébalo de inmediato (no esperes al día 10): pestaña
+       Actions → "Actualizar planes de isapre" → Run workflow.
+       Si termina en verde ✓, la actualización mensual quedó operativa.
+
+DOMINIO PROPIO (15 min + espera DNS) ───────────────────────────
+
+[ ] 9. Compra tu dominio en nic.cl (~$10.000 + IVA / año).
+
+[ ] 10. En nic.cl → administrar DNS del dominio, crea:
+        Registro A     @      185.199.108.153
+        Registro A     @      185.199.109.153
+        Registro A     @      185.199.110.153
+        Registro A     @      185.199.111.153
+        Registro CNAME www    TUUSUARIO.github.io
+
+[ ] 11. En GitHub: Settings → Pages → Custom domain →
+        escribe www.simulatuisapre.cl → Save.
+        Cuando aparezca disponible, marca "Enforce HTTPS"
+        (puede demorar hasta 24-48 h por propagación DNS; es normal).
+
+[ ] 12. GitHub crea solo un archivo llamado CNAME en el repo:
+        NO lo borres, es el que vincula tu dominio.
+
+DESPUÉS DE PUBLICAR ────────────────────────────────────────────
+
+[ ] 13. Prueba el flujo completo desde tu CELULAR con datos reales:
+        simula → "Me interesa este plan" → formulario → verifica que
+        el mensaje de WhatsApp te llegue con renta, grupo y plan.
+
+[ ] 14. Registra el sitio en Google Search Console
+        (search.google.com/search-console) con tu dominio. Gratis,
+        y necesario para SEO y para vincular Google Ads después.
+
+[ ] 15. Guarda la plantilla Informe_SimulaTuIsapre_plantilla.docx como
+        plantilla en Word. Un informe por lead, 15-20 min, y es lo
+        que convierte el contacto en cliente.
+
+MANTENCIÓN ─────────────────────────────────────────────────────
+
+• Datos de planes: AUTOMÁTICO (día 10 de cada mes, vía GitHub Actions).
+• UF: AUTOMÁTICA (se consulta en vivo en cada visita).
+• Fecha/hora del header: AUTOMÁTICA.
+• Lo único manual: responder los WhatsApp. Ese es tu trabajo ;)
+
+ASISTENTE IA PARA LOS INFORMES (OPCIONAL) ──────────────────────
+
+El archivo scripts/generar_informe_ia.py redacta el BORRADOR del
+informe a partir del mensaje de WhatsApp del lead. Corre en TU PC,
+no en el sitio. Dos opciones:
+
+  A) Gratis y privado (recomendada): instala Ollama (ollama.com),
+     ejecuta "ollama pull qwen2.5:7b" una vez, y luego:
+         python scripts/generar_informe_ia.py
+     Pega el mensaje del lead → obtienes el borrador en pantalla y
+     en borrador_informe.txt.
+
+  B) API de Qwen en la nube (DashScope): crea tu API key, define
+     la variable QWEN_API_KEY y corre el mismo script.
+
+  ⚠ NUNCA pongas una API key dentro de index.html: el sitio es
+    público y cualquiera podría robarla y gastar tu saldo.
+
+El borrador SIEMPRE se valida a mano: precios GES, convenios y
+carencias se confirman con las isapres antes de enviar el informe.
+
+
+Fuente de datos: Superintendencia de Salud — Datos abiertos de Isapres
+https://www.superdesalud.gob.cl/tax-biblioteca-digital/datos-abiertos-de-isapres-6988/
