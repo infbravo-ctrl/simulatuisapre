@@ -1,0 +1,39 @@
+name: Actualizar planes de isapre
+
+on:
+  schedule:
+    - cron: '0 12 10 * *'
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  actualizar:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar repositorio
+        uses: actions/checkout@v4
+
+      - name: Preparar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Instalar dependencias
+        run: pip install pandas requests
+
+      - name: Descargar y procesar archivo de la Superintendencia
+        run: python scripts/procesar_planes.py
+
+      - name: Publicar cambios si hay datos nuevos
+        run: |
+          git config user.name "actualizador-planes"
+          git config user.email "actions@github.com"
+          git add planes_data.js
+          if git diff --cached --quiet; then
+            echo "Sin cambios: el dato publicado es el mismo del mes anterior."
+          else
+            git commit -m "Datos actualizados: $(date +'%Y-%m-%d')"
+            git push
+          fi
