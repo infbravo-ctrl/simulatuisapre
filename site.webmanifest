@@ -1,0 +1,15 @@
+{
+  "name": "SimulaTuIsapre — Simulador de planes de isapre",
+  "short_name": "SimulaTuIsapre",
+  "description": "Compara los planes de las 7 isapres abiertas con tu sueldo y tu 7%.",
+  "lang": "es-CL",
+  "start_url": "/",
+  "display": "browser",
+  "background_color": "#F6FAF8",
+  "theme_color": "#122E31",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
