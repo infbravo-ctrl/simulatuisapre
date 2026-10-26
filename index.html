@@ -732,8 +732,26 @@ function datosLead(nombre, fono, mail){
 function guardarLead(d){
   if(!CONFIG.planillaUrl) return;
   const body = JSON.stringify(d);
-  try{ if(navigator.sendBeacon && navigator.sendBeacon(CONFIG.planillaUrl, new Blob([body], {type:'text/plain;charset=UTF-8'}))) return; }catch(e){}
-  fetch(CONFIG.planillaUrl, {method:'POST', mode:'no-cors', keepalive:true, headers:{'Content-Type':'text/plain;charset=UTF-8'}, body}).catch(()=>{});
+  // 1) fetch PRIMERO: petición legítima de la página que los bloqueadores
+  //    (Brave Shields, uBlock, etc.) NO matan. keepalive:true hace que
+  //    sobreviva aunque el usuario salte a WhatsApp en otra pestaña.
+  fetch(CONFIG.planillaUrl, {
+    method:'POST', mode:'no-cors', keepalive:true,
+    headers:{'Content-Type':'text/plain;charset=UTF-8'},
+    body
+  }).catch(()=>{});
+  // 2) sendBeacon DESPUÉS, como segundo intento redundante (SIN return).
+  //    Si el navegador lo bloquea y "miente" devolviendo true, da igual:
+  //    el fetch de arriba ya mandó la carta de verdad. Y como tu doPost
+  //    deduplica por folio (el lock serializa y la 2ª petición ve el folio
+  //    existente y NO reenvía correos), recibir las dos cartas es 100%
+  //    seguro: no se duplica fila ni correo.
+  try{
+    navigator.sendBeacon && navigator.sendBeacon(
+      CONFIG.planillaUrl,
+      new Blob([body], {type:'text/plain;charset=UTF-8'})
+    );
+  }catch(e){}
 }
 
 function enviarWhatsApp(){
