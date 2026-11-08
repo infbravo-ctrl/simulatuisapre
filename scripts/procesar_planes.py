@@ -8,7 +8,7 @@ de las 7 isapres abiertas y regenera planes_data.js.
 Uso local:  pip install pandas requests  →  python scripts/procesar_planes.py
 En GitHub Actions corre solo (ver .github/workflows/actualizar-planes.yml).
 """
-import io, json, sys, zipfile
+import io, json, re, sys, zipfile
 from datetime import date
 
 import pandas as pd
@@ -78,13 +78,43 @@ def procesar(ym, contenido):
         })
 
     periodo = f'{MESES[int(ym[4:6]) - 1]} {ym[:4]}'
+    total = int(df[[1, 2]].drop_duplicates().shape[0])   # todos los planes registrados en el archivo
     data = {'periodo': periodo,
             'fuente': 'Superintendencia de Salud - Archivo Maestro de Planes Complementarios',
+            'total': total,
             'planes': planes}
     with open('planes_data.js', 'w', encoding='utf-8') as f:
         f.write('const PLANES_DATA = '
                 + json.dumps(data, ensure_ascii=False, separators=(',', ':')) + ';')
-    print(f'✓ planes_data.js regenerado: {len(planes)} planes · periodo {periodo}')
+    print(f'✓ planes_data.js regenerado: {len(planes)} planes · {total} registrados · periodo {periodo}')
+    actualizar_index(len(planes), total, periodo)
+
+
+def miles(n):
+    return f'{n:,}'.replace(',', '.')
+
+
+def actualizar_index(n, total, periodo):
+    """Escribe los números del mes en index.html, para que Google y las redes
+    vean las mismas cifras que ve una persona en el navegador."""
+    try:
+        s = open('index.html', encoding='utf-8').read()
+    except FileNotFoundError:
+        print('  (sin index.html: no se actualizan los textos)')
+        return
+    cambios = [
+        (r'(<em id="nPlanes">)[^<]*(</em>)', miles(n)),
+        (r'(<span id="nPlanes2">)[^<]*(</span>)', miles(n)),
+        (r'(<span id="txtTotal">)[^<]*(</span>)', f'De los {miles(total)} planes registrados'),
+        (r'(<b class="periodo-dyn">)[^<]*(</b>)', periodo),
+        (r'(<span class="periodo-dyn">)[^<]*(</span>)', periodo),
+    ]
+    for patron, valor in cambios:
+        s, k = re.subn(patron, lambda m: m.group(1) + valor + m.group(2), s)
+        if k == 0:
+            print(f'  aviso: no se encontró {patron} en index.html')
+    open('index.html', 'w', encoding='utf-8').write(s)
+    print('✓ index.html actualizado con las cifras del mes')
 
 
 if __name__ == '__main__':
