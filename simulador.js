@@ -242,7 +242,11 @@ function calcular(){
     s -= norm(adic(p),0,aMax)*12;                     // solo castiga lo que pagaría sobre su 7%
     p.score = s;
   });
-  ranking = lista.sort((a,b)=>b.score-a.score);
+  // Los 3 primeros: el mejor plan de 3 isapres distintas (mismo orden por puntaje, sin favorecer a ninguna).
+  // Después siguen los demás planes en su orden normal ("Ver más").
+  const orden = lista.sort((a,b)=>b.score-a.score), primeros = [], vistas = new Set();
+  for(const p of orden){ if(primeros.length===3) break; if(!vistas.has(p.i)){ vistas.add(p.i); primeros.push(p); } }
+  ranking = [...primeros, ...orden.filter(p=>!primeros.includes(p))];
   mostrados = 3; planInteres = null; $('#planSel').hidden = true;
   render();
   $('#resultados').style.display='block';
