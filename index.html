@@ -399,7 +399,7 @@ footer a{color:#9FD9C6}
 <footer>
   <div class="inner">
     <b style="color:#fff">SimulaTuIsapre</b> es un servicio de asesoría previsional independiente. No somos una Institución de Salud Previsional ni estamos afiliados a ninguna. Los valores mostrados son estimaciones referenciales construidas desde datos públicos de la Superintendencia de Salud (<span class="periodo-dyn">septiembre 2026</span>) y no constituyen una oferta contractual. La contratación de un plan se realiza siempre a través de un agente de ventas registrado y la isapre respectiva.<br><br>
-    Datos: <a href="https://www.superdesalud.gob.cl/tax-biblioteca-digital/datos-abiertos-de-isapres-6988/" target="_blank" rel="noopener">Datos abiertos de Isapres — Superintendencia de Salud</a> · UF: mindicador.cl · <a href="/privacidad.html">Política de privacidad</a> · © 2026
+    Datos: <a href="https://www.superdesalud.gob.cl/tax-biblioteca-digital/datos-abiertos-de-isapres-6988/" target="_blank" rel="noopener">Datos abiertos de Isapres — Superintendencia de Salud</a> · UF: mindicador.cl · <a href="/comparar-isapres/">Comparar isapres</a> · <a href="/privacidad.html">Política de privacidad</a> · © 2026
   </div>
 </footer>
 
@@ -540,6 +540,11 @@ function chipsUnicos(id, clave, opcional){
 }
 chipsUnicos('#prioridad','prio',false);
 chipsUnicos('#prevision','prevision',true);
+(()=>{ const p = new URLSearchParams(location.search).get('prioridad');
+  if(['hosp','amb','precio','libre'].includes(p)) document.querySelector(`#prioridad .chip[data-v="${p}"]`).click(); })();
+
+
+/* Tabla de factores */
 
 
 /* Tabla de factores */
