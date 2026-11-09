@@ -1,0 +1,110 @@
+/* SimulaTuIsapre — estilos del simulador (los usan la portada y Compara isapres) */
+/* ── Simulador (ficha) ── */
+.ficha{background:var(--ticket);border:1px solid var(--linea);border-radius:14px;box-shadow:0 18px 40px -22px rgba(18,46,49,.28);overflow:hidden}
+.ficha-head{background:var(--tinta);color:#fff;padding:16px 22px;display:flex;justify-content:space-between;align-items:center}
+.ficha-head .t{font-weight:700;font-size:15px;letter-spacing:.02em}
+.ficha-head .folio{font-family:var(--mono);font-size:11.5px;color:#9FD9C6;white-space:nowrap}
+.pasos{display:flex;gap:6px;padding:14px 22px 0}
+.paso-dot{height:4px;flex:1;background:var(--linea);border-radius:2px}
+.paso-dot.on{background:var(--verde)}
+.ficha-body{padding:20px 22px 24px}
+.ficha-body h2{font-size:18px;font-weight:700;margin-bottom:4px}
+.ficha-body .ayuda{font-size:13.5px;color:var(--gris);margin-bottom:16px}
+label.campo{display:block;font-size:13px;font-weight:600;margin:14px 0 6px}
+input[type=text],input[type=tel],input[type=email],select{width:100%;padding:12px 14px;border:1.5px solid var(--linea);border-radius:8px;font-size:16px;font-family:var(--sans);background:#fff;color:var(--tinta)}
+input:focus,select:focus{border-color:var(--verde);outline:none}
+.monto-input{position:relative}
+.monto-input .peso{position:absolute;left:14px;top:50%;transform:translateY(-50%);font-family:var(--mono);color:var(--gris)}
+.monto-input input{padding-left:32px;font-family:var(--mono);font-weight:500}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.chip{border:1.5px solid var(--linea);background:#fff;padding:9px 14px;border-radius:999px;font-size:14px;font-weight:600;color:var(--tinta)}
+.chip.on{background:var(--verde);border-color:var(--verde);color:#fff}
+.cargas-lista{display:flex;flex-direction:column;gap:8px;margin-top:8px}
+.carga-row{display:flex;gap:8px;align-items:center}
+.carga-row select{flex:1}
+.carga-row button{background:none;border:none;color:#B4443C;font-size:20px;line-height:1;padding:4px 8px}
+.btn{display:inline-flex;justify-content:center;align-items:center;gap:8px;width:100%;padding:14px 18px;border-radius:9px;border:none;font-size:16px;font-weight:700}
+.btn-verde{background:var(--verde);color:#fff}
+.btn-verde:hover{background:var(--verde-osc)}
+.btn-fantasma{background:none;color:var(--gris);border:1.5px solid var(--linea);width:auto;padding:10px 16px;font-size:14px}
+.nav-pasos{display:flex;gap:10px;margin-top:22px}
+.nav-pasos .btn-verde{flex:1}
+.mini-nota{font-size:12px;color:var(--gris);margin-top:12px;text-align:center}
+.calc-7{margin-top:10px;background:var(--papel);border:1px dashed var(--linea);border-radius:8px;padding:10px 14px;font-family:var(--mono);font-size:13px;color:var(--gris)}
+.calc-7 b{color:var(--verde-osc);font-weight:600}
+
+/* ── Resultados: tickets ── */
+#resultados{max-width:1080px;margin:0 auto;padding:8px 20px 60px;display:none}
+.res-head{margin:26px 0 6px}
+.res-head h2{font-family:var(--disp);font-weight:650;font-size:clamp(24px,3.4vw,32px)}
+.res-head p{color:var(--gris);font-size:15px;max-width:70ch;margin-top:6px}
+.res-meta{font-family:var(--mono);font-size:12.5px;color:var(--gris);margin-top:10px}
+.tickets{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:22px;margin-top:24px}
+.ticket{background:var(--ticket);border:1px solid var(--linea);border-radius:12px;position:relative;display:flex;flex-direction:column}
+.ticket.destacado{border-color:var(--verde);box-shadow:0 14px 34px -18px rgba(14,123,99,.4)}
+.ticket .badge-top{position:absolute;top:-11px;left:18px;background:var(--verde);color:#fff;font-size:11.5px;font-weight:700;padding:4px 12px;border-radius:999px;letter-spacing:.03em}
+.tk-head{padding:20px 20px 12px;border-bottom:1px dashed var(--linea)}
+.tk-isapre{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--gris)}
+.tk-plan{font-weight:700;font-size:16.5px;margin-top:3px;line-height:1.3}
+.tk-cod{font-family:var(--mono);font-size:11.5px;color:var(--gris);margin-top:3px}
+.tk-precio{padding:16px 20px;border-bottom:1px dashed var(--linea)}
+.tk-precio .clp{font-family:var(--mono);font-weight:600;font-size:28px;letter-spacing:-.01em}
+.tk-precio .clp small{font-size:14px;color:var(--gris);font-weight:400}
+.tk-precio .uf{font-family:var(--mono);font-size:12.5px;color:var(--gris);margin-top:2px}
+.tag-7{display:inline-block;margin-top:8px;font-size:11.5px;font-weight:700;padding:3px 10px;border-radius:999px}
+.tag-7.dentro{background:#E3F4EC;color:var(--verde-osc)}
+.tag-7.excede{background:#FBEFE3;color:#9A5B12}
+.nota-7{margin-top:8px;font-size:12.5px;line-height:1.45;color:var(--tinta)}
+.nota-7 b{color:var(--verde-osc)}
+.tk-datos{padding:14px 20px;display:grid;grid-template-columns:1fr 1fr;gap:10px 14px;font-size:13px}
+.tk-datos .d b{display:block;font-family:var(--mono);font-size:15px;font-weight:600}
+.tk-datos .d span{color:var(--gris);font-size:11.5px}
+.tk-social{padding:0 20px 14px;font-size:12.5px;color:var(--gris)}
+.tk-social b{color:var(--tinta)}
+.tk-cta{margin-top:auto;padding:14px 20px 18px}
+.tk-cta .btn{font-size:15px;padding:12px}
+.ver-mas-wrap{text-align:center;margin-top:22px}
+
+/* ── Lead / asesoría ── */
+.asesoria{max-width:1080px;margin:0 auto 70px;padding:0 20px}
+.asesoria-card{background:var(--tinta);color:#EAF4F0;border-radius:16px;padding:clamp(28px,5vw,48px);display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center}
+@media(max-width:860px){.asesoria-card{grid-template-columns:1fr;gap:26px}}
+.asesoria h2{font-family:var(--disp);font-weight:650;font-size:clamp(24px,3.4vw,32px);color:#fff;line-height:1.15}
+.asesoria p{margin-top:12px;font-size:15.5px;color:#B9D2CA;max-width:52ch}
+.asesoria ul{margin-top:16px;display:grid;gap:8px;font-size:14.5px}
+.asesoria li{list-style:none;position:relative;padding-left:24px}
+.asesoria li::before{content:"✓";position:absolute;left:0;top:0;color:#7FD6BD;font-weight:700}
+.lead-form{background:#fff;border-radius:12px;padding:22px;color:var(--tinta)}
+.lead-form h3{font-size:17px;font-weight:700}
+.lead-form .sub-f{font-size:13px;color:var(--gris);margin-top:4px;margin-bottom:6px}
+.lead-form label.campo{margin-top:12px}
+.priv{font-size:11.5px;color:var(--gris);margin-top:10px;line-height:1.45}
+.edad-input{max-width:140px;font-family:var(--mono);font-weight:500}
+.carga-row select{flex:1;min-width:0}
+.carga-row input{width:84px;flex:none;font-family:var(--mono)}
+.opc{font-weight:400;color:var(--gris)}
+.err{color:#B4443C;font-size:13px;font-weight:600;margin-top:10px}
+.err:empty{display:none}
+.tk-precio .desglose{font-size:13px;color:var(--tinta);margin-top:4px}
+.tk-precio .desglose b{font-family:var(--mono);font-weight:600}
+.sin-sim{margin-top:12px;background:var(--sello-bg);border:1px solid #EBD9B4;border-radius:8px;padding:12px 14px;font-size:13.5px;line-height:1.45}
+.sin-sim b{display:block;font-size:14px;margin-bottom:2px}
+.sin-sim .btn-sim{margin-top:10px;width:100%;background:var(--verde);color:#fff;border:0;border-radius:8px;padding:11px 14px;font-weight:700;font-size:14.5px}
+.sin-sim .btn-sim:hover{background:var(--verde-osc)}
+.asesoria .lead-form .sin-sim p{margin-top:8px;font-size:12.5px;color:var(--gris)}
+.plan-sel{margin-top:12px;background:var(--papel);border:1px solid var(--linea);border-radius:8px;padding:10px 12px;font-size:13px;line-height:1.45}
+.plan-sel b{display:block;font-size:14px}
+.ayuda-clinica{margin-top:6px;font-size:12.5px;line-height:1.45}
+.folio-box{font-family:var(--mono);font-size:21px;font-weight:600;letter-spacing:.05em;background:var(--papel);border:1.5px dashed var(--verde);border-radius:8px;padding:12px;text-align:center;margin:10px 0 12px}
+.done-txt{font-size:14px;margin-bottom:16px}
+.asesoria .lead-form p{color:var(--gris)}
+.btn-link{display:block;margin:14px auto 0;background:none;border:none;color:var(--verde);text-decoration:underline;font-size:14px;font-weight:600}
+
+.oculto{display:none!important}
+.cookies{position:fixed;left:0;right:0;bottom:0;z-index:50;background:var(--tinta);color:#DDEBE6;font-size:13px;padding:10px max(16px,env(safe-area-inset-right,0px)) calc(10px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));display:flex;align-items:center;justify-content:center;gap:10px 14px;flex-wrap:wrap;box-shadow:0 -4px 16px rgba(0,0,0,.12)}
+.cookies[hidden]{display:none}
+.cookies a{color:#9FD9C6}
+.cookies button{border:0;border-radius:6px;padding:7px 14px;font-weight:600;font-size:13px}
+.cookies .ck-no{background:transparent;color:#DDEBE6;border:1px solid #4A6A66}
+.cookies .ck-si{background:#7FD6BD;color:var(--tinta)}
+.hp{position:absolute!important;left:0;top:0;width:1px!important;height:1px!important;min-width:0!important;padding:0!important;border:0!important;margin:0!important;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap}
