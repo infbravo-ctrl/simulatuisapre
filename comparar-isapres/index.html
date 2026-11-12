@@ -506,7 +506,7 @@ header.top{flex-wrap:nowrap}
      y se apaga cuando la persona ya eligió. */
   function ola(opc){
     const els = opc.items, n = els.length; if(!n || !opc.zona) return;
-    let fase = -2, amp = 0, visible = false, encima = false, ultimo = 0, sobre = null;
+    let fase = opc.uno ? 0 : -2, amp = 0, visible = false, encima = false, ultimo = 0, sobre = null;
     const foco = els.map(()=>0);
     if(matchMedia('(hover:hover)').matches){
       opc.zona.addEventListener('mouseenter', ()=>encima = true);
@@ -518,9 +518,11 @@ header.top{flex-wrap:nowrap}
       const dt = Math.min(.05, ultimo ? (t - ultimo) / 1000 : 0); ultimo = t;
       const activa = visible && !encima && !opc.listo();
       amp += ((activa ? 1 : 0) - amp) * Math.min(1, dt * 1.6);          // aparece y se calma despacio
-      fase += dt / opc.segPorItem; if(fase > n + 2) fase = -2;            // la ola baja y vuelve a empezar
+      fase += dt / opc.segPorItem; if(fase > n + (opc.uno ? 0 : 2)) fase = opc.uno ? 0 : -2;   // baja y vuelve a empezar
       els.forEach((el,i)=>{
-        const d = fase - i, w = Math.exp(-(d*d) / (2 * opc.ancho * opc.ancho)) * amp;
+        const d = fase - i;
+        const w = (opc.uno ? (d >= 0 && d < 1 ? Math.pow(Math.sin(Math.PI * d), 2) : 0)   // de a uno: crece y se achica
+                           : Math.exp(-(d*d) / (2 * opc.ancho * opc.ancho))) * amp;
         foco[i] += ((el === sobre ? 1 : 0) - foco[i]) * Math.min(1, dt * 8);
         opc.pintar(el, Math.max(w, foco[i]));
       });
@@ -528,8 +530,8 @@ header.top{flex-wrap:nowrap}
     }
   }
   ola({ zona: document.querySelector('.mapa'), items: marcas.map(g=>g.querySelector('text')),
-        segPorItem: .9, ancho: 1.1, listo: () => elegida,
-        pintar: (el, w) => { el.style.transform = w > .002 ? `scale(${(1 + .09 * w).toFixed(4)})` : ''; } });
+        uno: true, segPorItem: 1.7, listo: () => elegida,
+        pintar: (el, w) => { el.style.transform = w > .002 ? `scale(${(1 + .12 * w).toFixed(4)})` : ''; } });
   selReg.addEventListener('change', ()=>marcar(+selReg.value));
   marcar(+selReg.value || 13);
 
