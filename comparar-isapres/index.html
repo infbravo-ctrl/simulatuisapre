@@ -87,8 +87,6 @@ nav.menu a:hover{text-decoration:underline;text-underline-offset:4px}
 .mapa .dt{fill:var(--sol);stroke:#fff;stroke-width:2}
 .mapa .mk{fill:var(--sol);opacity:0}
 .mreg{cursor:pointer}
-.mreg:hover text{text-decoration:underline;text-decoration-thickness:2px}
-.mreg:hover .dt{stroke:var(--tinta);stroke-width:3}
 .mreg.on text{font-weight:800}
 .mreg.on .mk{opacity:1}
 .mreg.on .ld{stroke-opacity:1;stroke-width:2.5}
@@ -252,11 +250,12 @@ header.top{flex-wrap:nowrap}
 /* Llamados a empezar */
 .ficha.espera-renta .paso[data-paso="1"] .btn-verde{animation:none}
 .ficha input.llamar{animation:latido 1.8s ease-in-out infinite;border-color:var(--tinta)}
-.mreg .mk{transition:opacity .35s ease}
-.mreg.guino .mk{opacity:.6}
-.mreg.guino .dt{stroke:var(--tinta);stroke-width:3}
+.mreg text{transform-box:fill-box;transform-origin:left center;transition:transform .35s ease}
+.mreg.guino text{transform:scale(1.2)}
+@media(hover:hover){.mreg:hover text{transform:scale(1.2)}}
 .mapa-pie{animation:latido 1.8s ease-in-out infinite}
 @media(hover:hover){.mapa-pie:hover{animation:none}}
+.pr.brillo,.pr:active{border-color:var(--tinta);box-shadow:0 0 0 3px rgba(255,200,61,.6),0 12px 26px -14px rgba(11,37,69,.4)}
 </style>
 </head>
 <body>
@@ -513,6 +512,11 @@ header.top{flex-wrap:nowrap}
     })).observe(mapaEl);
   }
   marcas.forEach(g=>g.addEventListener('click', ()=>{ elegida = true; pararGuino(); }));
+  /* Con el mouse sobre el mapa, el recorrido se pausa; al salir, sigue */
+  if(mapaEl){
+    mapaEl.addEventListener('mouseenter', pararGuino);
+    mapaEl.addEventListener('mouseleave', ()=>{ if(!elegida && !tG) tG = setInterval(guino, 650); });
+  }
   selReg.addEventListener('change', ()=>marcar(+selReg.value));
   marcar(+selReg.value || 13);
 
@@ -537,18 +541,27 @@ header.top{flex-wrap:nowrap}
   }
   /* Tarjetas "¿Qué te importa más?": eligen la prioridad y llevan a completar el resto */
   const tarjetas = [...document.querySelectorAll('.pr[data-prio]')];
-  const marcarPrio = () => tarjetas.forEach(t=>t.setAttribute('aria-pressed', t.dataset.prio === estado.prio ? 'true' : 'false'));
+  let prioElegida = false;
+  const marcarPrio = () => tarjetas.forEach(t=>t.setAttribute('aria-pressed', prioElegida && t.dataset.prio === estado.prio ? 'true' : 'false'));
   tarjetas.forEach(t=>t.addEventListener('click', ()=>{
     const chip = document.querySelector(`#prioridad .chip[data-v="${t.dataset.prio}"]`);
     if(chip && !chip.classList.contains('on')) chip.click();
-    marcarPrio();
+    prioElegida = true; marcarPrio();
     if(ranking.length){ calcular(); return; }
     const texto = t.querySelector('b').textContent + ' ✓  ';
     if(rentaOk() && edadOk()){ irAPrioridad(); avisar(texto + 'Pulsa «Ver mis planes»'); }
     else llevar(pendiente(), texto + queFalta());
   }));
-  document.getElementById('prioridad').addEventListener('click', ()=>setTimeout(marcarPrio, 0));
+  document.getElementById('prioridad').addEventListener('click', e=>{ if(e.target.closest('.chip')){ prioElegida = true; setTimeout(marcarPrio, 0); } });
   marcarPrio();
+  /* En el teléfono: un solo recorrido de brillo por las tarjetas al llegar a la sección */
+  const prios = document.querySelector('.prios');
+  if(prios && !matchMedia('(hover:hover)').matches && 'IntersectionObserver' in window){
+    const ob = new IntersectionObserver(es=>{ if(!es[0].isIntersecting) return; ob.disconnect();
+      tarjetas.forEach((t,i)=>{ setTimeout(()=>t.classList.add('brillo'), 300 + i*450); setTimeout(()=>t.classList.remove('brillo'), 300 + i*450 + 700); });
+    }, {threshold:.6});
+    ob.observe(prios);
+  }
 
   /* Bloque del informe: marca arriba */
   const cajaInforme = document.querySelector('.asesoria-card > div');
