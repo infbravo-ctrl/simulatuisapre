@@ -251,12 +251,10 @@ header.top{flex-wrap:nowrap}
 /* Llamados a empezar */
 .ficha.espera-renta .paso[data-paso="1"] .btn-verde{animation:none}
 .ficha input.llamar{animation:latido 1.8s ease-in-out infinite;border-color:var(--tinta)}
-.mreg text{transform-box:fill-box;transform-origin:left center;transition:transform .35s ease}
-.mreg.guino text{transform:scale(1.2)}
-@media(hover:hover){.mreg:hover text{transform:scale(1.2)}}
+.mreg text{transform-box:fill-box;transform-origin:left center}
 .mapa-pie{animation:latido 1.8s ease-in-out infinite}
 @media(hover:hover){.mapa-pie:hover{animation:none}}
-.pr.brillo,.pr:active{border-color:var(--tinta);box-shadow:0 0 0 3px rgba(255,200,61,.6),0 12px 26px -14px rgba(11,37,69,.4)}
+.pr:active{border-color:var(--tinta);box-shadow:0 0 0 3px rgba(255,200,61,.6),0 12px 26px -14px rgba(11,37,69,.4)}
 
 /* Propio de la portada */
 h1 em{font-style:normal}
@@ -455,23 +453,38 @@ h1 em{font-style:normal}
   const llamarRenta = () => { if(!renta) return; renta.classList.toggle('llamar', !renta.value && document.activeElement !== renta); sim.classList.toggle('espera-renta', !renta.value); };
   if(renta){ ['input','focus','blur'].forEach(ev=>renta.addEventListener(ev, llamarRenta)); llamarRenta(); }
 
-  /* Mapa: las regiones parpadean una a una, de norte a sur, hasta que la persona elige la suya */
-  let elegida = false, iG = 0, tG = null;
-  const pararGuino = () => { clearInterval(tG); tG = null; marcas.forEach(g=>g.classList.remove('guino')); };
-  const guino = () => { marcas.forEach(g=>g.classList.remove('guino')); const g = marcas[iG++ % marcas.length]; if(g) g.classList.add('guino'); };
-  const mapaEl = document.querySelector('.mapa');
-  if(mapaEl && 'IntersectionObserver' in window){
-    new IntersectionObserver(es=>es.forEach(e=>{
-      if(e.isIntersecting && !elegida && !tG){ tG = setInterval(guino, 650); }
-      else if(!e.isIntersecting && tG){ pararGuino(); }
-    })).observe(mapaEl);
+  let elegida = false;
+  marcas.forEach(g=>g.addEventListener('click', ()=>{ elegida = true; }));
+
+  /* Movimiento suave y continuo: una ola lenta que baja por los nombres del mapa
+     y por las tarjetas "¿Qué te importa más?". Se calma sola con el mouse encima
+     y se apaga cuando la persona ya eligió. */
+  function ola(opc){
+    const els = opc.items, n = els.length; if(!n || !opc.zona) return;
+    let fase = -2, amp = 0, visible = false, encima = false, ultimo = 0, sobre = null;
+    const foco = els.map(()=>0);
+    if(matchMedia('(hover:hover)').matches){
+      opc.zona.addEventListener('mouseenter', ()=>encima = true);
+      opc.zona.addEventListener('mouseleave', ()=>{ encima = false; sobre = null; });
+      els.forEach(el=>{ el.addEventListener('mouseenter', ()=>sobre = el); el.addEventListener('mouseleave', ()=>{ if(sobre === el) sobre = null; }); });
+    }
+    if('IntersectionObserver' in window) new IntersectionObserver(es=>{ visible = es[0].isIntersecting; if(visible) requestAnimationFrame(paso); }).observe(opc.zona);
+    function paso(t){
+      const dt = Math.min(.05, ultimo ? (t - ultimo) / 1000 : 0); ultimo = t;
+      const activa = visible && !encima && !opc.listo();
+      amp += ((activa ? 1 : 0) - amp) * Math.min(1, dt * 1.6);          // aparece y se calma despacio
+      fase += dt / opc.segPorItem; if(fase > n + 2) fase = -2;            // la ola baja y vuelve a empezar
+      els.forEach((el,i)=>{
+        const d = fase - i, w = Math.exp(-(d*d) / (2 * opc.ancho * opc.ancho)) * amp;
+        foco[i] += ((el === sobre ? 1 : 0) - foco[i]) * Math.min(1, dt * 8);
+        opc.pintar(el, Math.max(w, foco[i]));
+      });
+      if(visible) requestAnimationFrame(paso); else ultimo = 0;
+    }
   }
-  marcas.forEach(g=>g.addEventListener('click', ()=>{ elegida = true; pararGuino(); }));
-  /* Con el mouse sobre el mapa, el recorrido se pausa; al salir, sigue */
-  if(mapaEl){
-    mapaEl.addEventListener('mouseenter', pararGuino);
-    mapaEl.addEventListener('mouseleave', ()=>{ if(!elegida && !tG) tG = setInterval(guino, 650); });
-  }
+  ola({ zona: document.querySelector('.mapa'), items: marcas.map(g=>g.querySelector('text')),
+        segPorItem: .9, ancho: 1.1, listo: () => elegida,
+        pintar: (el, w) => { el.style.transform = w > .002 ? `scale(${(1 + .09 * w).toFixed(4)})` : ''; } });
   selReg.addEventListener('change', ()=>marcar(+selReg.value));
   marcar(+selReg.value || 13);
 
@@ -509,15 +522,11 @@ h1 em{font-style:normal}
   }));
   document.getElementById('prioridad').addEventListener('click', e=>{ if(e.target.closest('.chip')){ prioElegida = true; setTimeout(marcarPrio, 0); } });
   marcarPrio();
-  /* En el teléfono: un solo recorrido de brillo por las tarjetas al llegar a la sección */
-  const prios = document.querySelector('.prios');
-  if(prios && !matchMedia('(hover:hover)').matches && 'IntersectionObserver' in window){
-    const ob = new IntersectionObserver(es=>{ if(!es[0].isIntersecting) return; ob.disconnect();
-      tarjetas.forEach((t,i)=>{ setTimeout(()=>t.classList.add('brillo'), 300 + i*450); setTimeout(()=>t.classList.remove('brillo'), 300 + i*450 + 700); });
-    }, {threshold:.6});
-    ob.observe(prios);
-  }
 
+
+  ola({ zona: document.querySelector('.prios'), items: tarjetas,
+        segPorItem: 2.4, ancho: .8, listo: () => prioElegida,
+        pintar: (el, w) => { el.style.boxShadow = w > .01 ? `0 0 0 ${(1 + 3 * w).toFixed(2)}px rgba(255,200,61,${(.7 * w).toFixed(3)})` : ''; } });
   /* Bloque del informe: marca arriba */
   const cajaInforme = document.querySelector('.asesoria-card > div');
   if(cajaInforme) cajaInforme.insertAdjacentHTML('afterbegin', '<div class="marca-informe">' + document.querySelector('.logo svg').outerHTML.replace('#0B2545', '#FFFFFF') + '<span>Simula<mark>Tu</mark>Isapre</span></div>');
