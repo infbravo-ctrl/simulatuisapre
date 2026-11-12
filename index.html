@@ -338,10 +338,10 @@ h1 em{font-style:normal}
   <h2>¿Qué te importa más?</h2>
   <p class="intro">Elige tu prioridad y el simulador ordena los planes según ella.</p>
   <div class="prios">
-    <button type="button" class="pr" data-prio="hosp" aria-pressed="false"><b>Mejor cobertura hospitalaria</b><span>Lo que el plan paga si te hospitalizan o te operan.</span></button>
-    <button type="button" class="pr" data-prio="amb" aria-pressed="false"><b>Mejor cobertura ambulatoria</b><span>Consultas, exámenes e imágenes, sin hospitalización.</span></button>
-    <button type="button" class="pr" data-prio="precio" aria-pressed="false"><b>Pagar lo menos posible</b><span>Planes que caben en tu 7%, o que piden el menor adicional.</span></button>
-    <button type="button" class="pr" data-prio="libre" aria-pressed="false"><b>Libre elección de médicos</b><span>Atenderte con el médico o la clínica que prefieras.</span></button>
+    <button type="button" class="pr" data-prio="hosp" aria-pressed="false"><b>Mejor cobertura hospitalaria</b><span>Que el plan me cubra más si me hospitalizan o me operan.</span></button>
+    <button type="button" class="pr" data-prio="amb" aria-pressed="false"><b>Mejor cobertura ambulatoria</b><span>Que cubra más mis consultas, exámenes e imágenes, sin hospitalización.</span></button>
+    <button type="button" class="pr" data-prio="precio" aria-pressed="false"><b>Pagar lo menos posible</b><span>Que el plan quepa en mi 7%, o que pida el menor adicional.</span></button>
+    <button type="button" class="pr" data-prio="libre" aria-pressed="false"><b>Libre elección de médicos</b><span>Poder atenderme con el médico o la clínica que yo prefiera.</span></button>
   </div>
 </section>
 
@@ -390,9 +390,9 @@ h1 em{font-style:normal}
   guia.className = 'guia-sim'; guia.setAttribute('role', 'status'); guia.setAttribute('aria-live', 'polite');
   sim.querySelector('.ficha-head').insertAdjacentElement('afterend', guia);
   let tGuia, tAten;
-  function avisar(msg){
+  function avisar(msg, seg){
     guia.textContent = msg; guia.classList.add('ver');
-    clearTimeout(tGuia); tGuia = setTimeout(()=>guia.classList.remove('ver'), 6000);
+    clearTimeout(tGuia); tGuia = setTimeout(()=>guia.classList.remove('ver'), (seg || 6) * 1000);
   }
   const paso = () => +((sim.querySelector('.paso:not(.oculto)') || {}).dataset || {paso:1}).paso || 1;
   const rentaOk = () => estado.renta >= 100000;
@@ -403,10 +403,10 @@ h1 em{font-style:normal}
     if(paso() === 2 && !edadOk()) return document.getElementById('edadTit');
     return boton();
   }
-  function llevar(el, msg){
+  function llevar(el, msg, seg){
     sim.scrollIntoView({behavior:'instant', block:'center'});
     if(el) el.focus({preventScroll:true});
-    if(msg) avisar(msg);
+    if(msg) avisar(msg, seg);
     sim.classList.add('atencion'); clearTimeout(tAten); tAten = setTimeout(()=>sim.classList.remove('atencion'), 2500);
   }
   const queFalta = () => !rentaOk() ? 'Ahora tu renta imponible' : (paso() === 2 && !edadOk() ? 'Ahora tu edad' : 'Sigue con tu simulación');
@@ -438,10 +438,15 @@ h1 em{font-style:normal}
   const marcas = [...document.querySelectorAll('.mreg')];
   const marcar = id => marcas.forEach(g=>g.classList.toggle('on', +g.dataset.r === id));
   const nombre = id => id === 13 ? 'Metropolitana' : ((REGIONES.find(r=>r.i === id) || {}).n || '');
+  const caja = document.getElementById('alcanceTxt');
+  /* Planes en venta en una región (datos oficiales del mes) */
+  const enRegion = id => PLANES_DATA.planes.filter(p=>p.r[id - 1] === 'S').length;
   function elegirRegion(id){
     selReg.value = id; estado.region = id; marcar(id);
-    if(ranking.length){ calcular(); avisar('Región ' + nombre(id) + ' ✓'); return; }
-    llevar(pendiente(), nombre(id) + ' ✓  ' + queFalta());
+    const n = enRegion(id).toLocaleString('es-CL');
+    if(ranking.length){ calcular(); avisar(nombre(id) + ' ✓  ' + n + ' planes en venta', 8); return; }
+    if(caja) caja.innerHTML = `En ${id === 13 ? 'la Región Metropolitana' : 'la región de ' + nombre(id)} hay <strong>${n}</strong> planes en venta. Simula y te decimos cuántos caben en tu 7%.`;
+    llevar(pendiente(), nombre(id) + ' ✓  ' + n + ' planes en venta. ' + queFalta(), 8);
   }
   marcas.forEach(g=>{
     g.addEventListener('click', ()=>elegirRegion(+g.dataset.r));
@@ -500,7 +505,6 @@ h1 em{font-style:normal}
   }
 
   /* Alcance de tu 7%: después de simular, cuántos planes de su región caben en su 7% */
-  const caja = document.getElementById('alcanceTxt');
   function alcance(){
     if(!ranking.length || !caja) return;
     const n = ranking.filter(p=>p.dentro).length;
@@ -527,7 +531,7 @@ h1 em{font-style:normal}
 
 
   ola({ zona: document.querySelector('.prios'), items: tarjetas,
-        segPorItem: 2.4, ancho: .8, listo: () => prioElegida,
+        uno: true, segPorItem: 4, listo: () => prioElegida,
         pintar: (el, w) => { el.style.boxShadow = w > .01 ? `0 0 0 ${(1 + 3 * w).toFixed(2)}px rgba(255,200,61,${(.7 * w).toFixed(3)})` : ''; } });
   /* Bloque del informe: marca arriba */
   const cajaInforme = document.querySelector('.asesoria-card > div');
