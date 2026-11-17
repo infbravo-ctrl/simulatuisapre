@@ -11,9 +11,9 @@
 
 /* ── Piezas del simulador (HTML) ── */
 const STI_PIEZAS = {
- "ficha": "<div class=\"ficha\" id=\"simulador\">\n    <div class=\"ficha-head\">\n      <div class=\"t\">Simulación de cotización</div>\n      <div class=\"folio\" id=\"folio\">FICHA Nº —</div>\n    </div>\n    <div class=\"aviso-informe\" style=\"background:#E8F4EF;color:var(--tinta);font-size:13.5px;line-height:1.45;padding:10px 22px;border-bottom:1px solid var(--linea)\">Ves tus planes sin dejar tus datos. Si quieres, al final te enviamos tu <b>informe gratis</b> por WhatsApp o correo.</div>\n    <div class=\"pasos\" aria-hidden=\"true\">\n      <div class=\"paso-dot on\" data-p=\"1\"></div><div class=\"paso-dot\" data-p=\"2\"></div><div class=\"paso-dot\" data-p=\"3\"></div><div class=\"paso-dot\" data-p=\"4\"></div>\n    </div>\n\n    <!-- Paso 1: renta -->\n    <div class=\"ficha-body paso\" data-paso=\"1\">\n      <h2>¿Cuál es tu renta imponible?</h2>\n      <p class=\"ayuda\">Ingresa tu sueldo real antes de descuentos (el total imponible de tu liquidación). Así el cálculo de tu 7% es más exacto.</p>\n      <label class=\"campo\" for=\"renta\">Renta imponible mensual</label>\n      <div class=\"monto-input\"><span class=\"peso\">$</span><input type=\"text\" id=\"renta\" inputmode=\"numeric\" placeholder=\"1.758.244\" autocomplete=\"off\"></div>\n      <div class=\"calc-7\" id=\"calc7\">Tu 7% legal: <b>—</b></div>\n      <div class=\"nav-pasos\"><button class=\"btn btn-verde\" onclick=\"irPaso(2)\">Continuar →</button></div>\n      <p class=\"mini-nota\">No guardamos este dato: el cálculo ocurre en tu navegador.</p>\n    </div>\n\n    <!-- Paso 2: edad y cargas -->\n    <div class=\"ficha-body paso oculto\" data-paso=\"2\">\n      <h2>¿Quiénes entran al plan?</h2>\n      <p class=\"ayuda\">El precio depende de la edad de cada persona. <b>No te preguntamos tu sexo:</b> desde 2020 no influye en el precio.</p>\n      <label class=\"campo\" for=\"edadTit\">Tu edad</label>\n      <input type=\"text\" id=\"edadTit\" class=\"edad-input\" inputmode=\"numeric\" maxlength=\"2\" placeholder=\"Ej: 38\" autocomplete=\"off\">\n      <label class=\"campo\">Cargas <span class=\"opc\">(opcional: cónyuge, hijos u otras personas)</span></label>\n      <div class=\"cargas-lista\" id=\"cargasLista\"></div>\n      <button class=\"btn btn-fantasma\" type=\"button\" style=\"margin-top:10px\" onclick=\"agregarCarga()\">+ Agregar carga</button>\n      <p class=\"err\" id=\"err2\" role=\"alert\"></p>\n      <div class=\"nav-pasos\"><button class=\"btn btn-fantasma\" onclick=\"irPaso(1)\">← Volver</button><button class=\"btn btn-verde\" onclick=\"irPaso(3)\">Continuar →</button></div>\n    </div>\n\n    <!-- Paso 3: región -->\n    <div class=\"ficha-body paso oculto\" data-paso=\"3\">\n      <h2>¿En qué región vives?</h2>\n      <p class=\"ayuda\">Mostramos solo planes disponibles en tu región según lo declarado por cada isapre.</p>\n      <label class=\"campo\" for=\"region\">Región</label>\n      <select id=\"region\"></select>\n      <label class=\"campo\">Hoy estás en <span class=\"opc\">(opcional)</span></label>\n      <div class=\"chips\" id=\"prevision\">\n        <button type=\"button\" class=\"chip\" data-v=\"Fonasa\">Fonasa</button>\n        <button type=\"button\" class=\"chip\" data-v=\"Isapre\">Isapre</button>\n        <button type=\"button\" class=\"chip\" data-v=\"No sé\">No sé</button>\n      </div>\n      <div class=\"nav-pasos\"><button class=\"btn btn-fantasma\" onclick=\"irPaso(2)\">← Volver</button><button class=\"btn btn-verde\" onclick=\"irPaso(4)\">Continuar →</button></div>\n    </div>\n\n    <!-- Paso 4: prioridad -->\n    <div class=\"ficha-body paso oculto\" data-paso=\"4\">\n      <h2>¿Qué te importa más?</h2>\n      <p class=\"ayuda\">Con esto ordenamos los planes que calzan con tu presupuesto.</p>\n      <div class=\"chips\" id=\"prioridad\">\n        <button class=\"chip on\" data-v=\"hosp\">Mejor cobertura hospitalaria</button>\n        <button class=\"chip\" data-v=\"amb\">Mejor cobertura ambulatoria</button>\n        <button class=\"chip\" data-v=\"precio\">Pagar lo menos posible</button>\n        <button class=\"chip\" data-v=\"libre\">Libre elección de médicos</button>\n      </div>\n      <div class=\"nav-pasos\"><button class=\"btn btn-fantasma\" onclick=\"irPaso(3)\">← Volver</button><button class=\"btn btn-verde\" id=\"btnCalcular\" onclick=\"calcular()\">Ver mis planes →</button></div>\n      <p class=\"mini-nota\">Resultado inmediato. Sin correo, sin RUT, sin teléfono.</p>\n    </div>\n  </div>",
+ "ficha": "<div class=\"ficha\" id=\"simulador\">\n    <div class=\"ficha-head\">\n      <div class=\"t\">Simulación de cotización</div>\n      <div class=\"folio\" id=\"folio\">FICHA Nº —</div>\n    </div>\n    <div class=\"aviso-informe\" style=\"background:#E8F4EF;color:var(--tinta);font-size:13.5px;line-height:1.45;padding:10px 22px;border-bottom:1px solid var(--linea)\">Simula en 4 pasos, elige tu plan y recibe tu <b>informe gratis</b> por WhatsApp o correo.</div>\n    <div class=\"pasos\" aria-hidden=\"true\">\n      <div class=\"paso-dot on\" data-p=\"1\"></div><div class=\"paso-dot\" data-p=\"2\"></div><div class=\"paso-dot\" data-p=\"3\"></div><div class=\"paso-dot\" data-p=\"4\"></div>\n    </div>\n\n    <!-- Paso 1: renta -->\n    <div class=\"ficha-body paso\" data-paso=\"1\">\n      <p class=\"paso-num\" style=\"font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--gris);margin:0 0 4px\">Paso 1 de 4</p>\n      <h2>¿Cuál es tu renta imponible?</h2>\n      <p class=\"ayuda\">Ingresa tu sueldo real antes de descuentos (el total imponible de tu liquidación). Así el cálculo de tu 7% es más exacto.</p>\n      <label class=\"campo\" for=\"renta\">Renta imponible mensual</label>\n      <div class=\"monto-input\"><span class=\"peso\">$</span><input type=\"text\" id=\"renta\" inputmode=\"numeric\" placeholder=\"1.758.244\" autocomplete=\"off\"></div>\n      <div class=\"calc-7\" id=\"calc7\">Tu 7% legal: <b>—</b></div>\n      <div class=\"nav-pasos\"><button class=\"btn btn-verde\" onclick=\"irPaso(2)\">Continuar →</button></div>\n      <p class=\"mini-nota\">Tu 7% aparece al momento.</p>\n    </div>\n\n    <!-- Paso 2: edad y cargas -->\n    <div class=\"ficha-body paso oculto\" data-paso=\"2\">\n      <p class=\"paso-num\" style=\"font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--gris);margin:0 0 4px\">Paso 2 de 4</p>\n      <h2>¿Quiénes entran al plan?</h2>\n      <p class=\"ayuda\">El precio depende de la edad de cada persona. <b>No te preguntamos tu sexo:</b> desde 2020 no influye en el precio.</p>\n      <label class=\"campo\" for=\"edadTit\">Tu edad</label>\n      <input type=\"text\" id=\"edadTit\" class=\"edad-input\" inputmode=\"numeric\" maxlength=\"2\" placeholder=\"Ej: 38\" autocomplete=\"off\">\n      <label class=\"campo\">Cargas <span class=\"opc\">(opcional: cónyuge, hijos u otras personas)</span></label>\n      <div class=\"cargas-lista\" id=\"cargasLista\"></div>\n      <button class=\"btn btn-fantasma\" type=\"button\" style=\"margin-top:10px\" onclick=\"agregarCarga()\">+ Agregar carga</button>\n      <p class=\"err\" id=\"err2\" role=\"alert\"></p>\n      <div class=\"nav-pasos\"><button class=\"btn btn-fantasma\" onclick=\"irPaso(1)\">← Volver</button><button class=\"btn btn-verde\" onclick=\"irPaso(3)\">Continuar →</button></div>\n      <p class=\"mini-nota\">Precio con la tabla oficial de factores por edad.</p>\n    </div>\n\n    <!-- Paso 3: región -->\n    <div class=\"ficha-body paso oculto\" data-paso=\"3\">\n      <p class=\"paso-num\" style=\"font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--gris);margin:0 0 4px\">Paso 3 de 4</p>\n      <h2>¿En qué región vives?</h2>\n      <p class=\"ayuda\">Mostramos solo planes disponibles en tu región según lo declarado por cada isapre.</p>\n      <label class=\"campo\" for=\"region\">Región</label>\n      <select id=\"region\"></select>\n      <label class=\"campo\">Hoy estás en <span class=\"opc\">(opcional)</span></label>\n      <div class=\"chips\" id=\"prevision\">\n        <button type=\"button\" class=\"chip\" data-v=\"Fonasa\">Fonasa</button>\n        <button type=\"button\" class=\"chip\" data-v=\"Isapre\">Isapre</button>\n        <button type=\"button\" class=\"chip\" data-v=\"No sé\">No sé</button>\n      </div>\n      <div class=\"nav-pasos\"><button class=\"btn btn-fantasma\" onclick=\"irPaso(2)\">← Volver</button><button class=\"btn btn-verde\" onclick=\"irPaso(4)\">Continuar →</button></div>\n      <p class=\"mini-nota\">Datos oficiales y actualizados.</p>\n    </div>\n\n    <!-- Paso 4: prioridad -->\n    <div class=\"ficha-body paso oculto\" data-paso=\"4\">\n      <p class=\"paso-num\" style=\"font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--gris);margin:0 0 4px\">Paso 4 de 4</p>\n      <h2>¿Qué te importa más?</h2>\n      <p class=\"ayuda\">Con esto ordenamos los planes que calzan con tu presupuesto.</p>\n      <div class=\"chips\" id=\"prioridad\">\n        <button class=\"chip on\" data-v=\"hosp\">Mejor cobertura hospitalaria</button>\n        <button class=\"chip\" data-v=\"amb\">Mejor cobertura ambulatoria</button>\n        <button class=\"chip\" data-v=\"precio\">Pagar lo menos posible</button>\n        <button class=\"chip\" data-v=\"libre\">Libre elección de médicos</button>\n      </div>\n      <div class=\"nav-pasos\"><button class=\"btn btn-fantasma\" onclick=\"irPaso(3)\">← Volver</button><button class=\"btn btn-verde\" id=\"btnCalcular\" onclick=\"calcular()\">Ver mis planes →</button></div>\n      <p class=\"mini-nota\">Elige un plan y pide tu informe gratis.</p>\n    </div>\n  </div>",
  "resultados": "<!-- Resultados -->\n<section id=\"resultados\" aria-live=\"polite\">\n  <div class=\"res-head\">\n    <h2>Tus mejores opciones</h2>\n    <p id=\"resSub\"></p>\n    <div class=\"res-meta\" id=\"resMeta\"></div>\n  </div>\n  <div class=\"tickets\" id=\"ticketsWrap\"></div>\n  <div class=\"ver-mas-wrap\"><button class=\"btn btn-fantasma\" id=\"verMas\" onclick=\"verMas()\">Ver más planes que calzan</button></div>\n</section>",
- "asesoria": "<section class=\"asesoria\" id=\"asesoria\">\n  <div class=\"asesoria-card\">\n    <div>\n      <h2>El simulador te muestra los planes. Un asesor te evita la letra chica.</h2>\n      <p>El precio es solo una parte. También importa en qué clínicas te atiendes, cuánto paga el plan como máximo en cada atención y desde cuándo te cubre todo. Revisamos tu caso y te enviamos por WhatsApp un informe preparado por una persona.</p>\n      <ul>\n        <li>Asesoría gratuita y sin compromiso de contratar</li>\n        <li>Comparamos las 7 isapres, no trabajamos para ninguna</li>\n        <li>Te decimos también si te conviene quedarte donde estás</li>\n      </ul>\n    </div>\n    <form class=\"lead-form\" id=\"leadForm\" novalidate>\n      <h3>Recibe tu informe personalizado</h3>\n      <p class=\"sub-f\">Respondemos dentro del día hábil.</p>\n      <div class=\"sin-sim\" id=\"sinSim\">\n        <b>Primero haz tu simulación (1 minuto)</b>\n        Tu informe se prepara con tu renta, tus edades y el plan que elijas.\n        <button type=\"button\" class=\"btn-sim\" id=\"btnSimPrimero\">Simular ahora →</button>\n      </div>\n      <div id=\"leadCampos\" hidden>\n      <div class=\"plan-sel\" id=\"planSel\" hidden></div>\n      <label class=\"campo\" for=\"leadNombre\">Nombre</label>\n      <input type=\"text\" id=\"leadNombre\" autocomplete=\"name\" required>\n      <label class=\"campo\" for=\"leadFono\">WhatsApp</label>\n      <input type=\"tel\" id=\"leadFono\" inputmode=\"tel\" placeholder=\"+56 9 1234 5678\" autocomplete=\"tel\" required>\n      <label class=\"campo\" for=\"leadMail\">Correo (opcional)</label>\n      <input type=\"email\" id=\"leadMail\" autocomplete=\"email\">\n      <label class=\"campo\" for=\"leadClinica\">¿Tienes una clínica de preferencia? <span class=\"opc\">(opcional)</span></label>\n      <input type=\"text\" id=\"leadClinica\" list=\"listaClinicas\" autocomplete=\"off\" placeholder=\"Ej: Clínica Indisa\">\n      <datalist id=\"listaClinicas\"><option value=\"Clínica Alemana\"><option value=\"Clínica Las Condes\"><option value=\"Clínica Santa María\"><option value=\"Clínica Dávila\"><option value=\"Clínica Indisa\"><option value=\"RedSalud\"><option value=\"UC Christus\"><option value=\"Clínica Bupa Santiago\"><option value=\"Clínica Meds\"><option value=\"Clínica Tabancura\"><option value=\"Clínica Vespucio\"><option value=\"Integramédica\"></datalist>\n      <p class=\"ayuda-clinica\">La revisamos en el contrato del plan y en tu informe te decimos si este plan te conviene para atenderte ahí.</p>\n      <input type=\"text\" id=\"leadWeb\" class=\"hp\" tabindex=\"-1\" autocomplete=\"off\" aria-hidden=\"true\">\n      <div style=\"margin-top:16px\"><button type=\"submit\" class=\"btn btn-verde\">Quiero mi informe gratis</button></div>\n      <p class=\"priv\">Usamos tus datos solo para preparar tu informe y contactarte. Solo los compartiremos con un agente de ventas autorizado de la isapre que elijas si tú lo apruebas. Puedes pedir su eliminación cuando quieras. <a href=\"/privacidad.html\">Política de privacidad</a>.</p>\n      </div>\n    </form>\n    <div class=\"lead-form\" id=\"leadDone\" hidden>\n      <h3 id=\"doneTitulo\">¡Listo!</h3>\n      <p class=\"sub-f\">Este es el folio de tu solicitud:</p>\n      <div class=\"folio-box\" id=\"doneFolio\"></div>\n      <p class=\"done-txt\" id=\"doneCuando\"></p>\n      <button type=\"button\" class=\"btn btn-verde\" onclick=\"enviarWhatsApp()\">¿No se envió? Reintentar por WhatsApp</button>\n      <button type=\"button\" class=\"btn-link\" onclick=\"volverASimular()\">← Volver a simular</button>\n    </div>\n  </div>\n</section>",
+ "asesoria": "<section class=\"asesoria\" id=\"asesoria\">\n  <div class=\"asesoria-card\">\n    <div>\n      <h2>Tu informe gratis, preparado por una persona.</h2>\n      <p>Revisamos el plan que elegiste y te lo enviamos por WhatsApp.</p>\n      <ul>\n        <li>Comparamos las 7 isapres, no trabajamos para ninguna</li>\n        <li>Te decimos también si te conviene quedarte donde estás</li>\n      </ul>\n    </div>\n    <form class=\"lead-form\" id=\"leadForm\" novalidate>\n      <h3>Te enviamos tu informe gratis</h3>\n      <p class=\"sub-f\">Respondemos dentro del día hábil.</p>\n      <div class=\"sin-sim\" id=\"sinSim\">\n        <b>Primero haz tu simulación (1 minuto)</b>\n        Tu informe se prepara con tu renta, tus edades y el plan que elijas.\n        <button type=\"button\" class=\"btn-sim\" id=\"btnSimPrimero\">Simular ahora →</button>\n      </div>\n      <div id=\"leadCampos\" hidden>\n      <div class=\"plan-sel\" id=\"planSel\" hidden></div>\n      <label class=\"campo\" for=\"leadNombre\">Nombre</label>\n      <input type=\"text\" id=\"leadNombre\" autocomplete=\"name\" required>\n      <label class=\"campo\" for=\"leadFono\">WhatsApp</label>\n      <input type=\"tel\" id=\"leadFono\" inputmode=\"tel\" placeholder=\"9 1234 5678\" autocomplete=\"tel\" required>\n      <label class=\"campo\" for=\"leadMail\">Correo (opcional)</label>\n      <input type=\"email\" id=\"leadMail\" autocomplete=\"email\">\n      <label class=\"campo\" for=\"leadClinica\">¿Tienes una clínica de preferencia? <span class=\"opc\">(opcional)</span></label>\n      <input type=\"text\" id=\"leadClinica\" list=\"listaClinicas\" autocomplete=\"off\" placeholder=\"Ej: Clínica Indisa\">\n      <datalist id=\"listaClinicas\"><option value=\"Clínica Alemana\"><option value=\"Clínica Las Condes\"><option value=\"Clínica Santa María\"><option value=\"Clínica Dávila\"><option value=\"Clínica Indisa\"><option value=\"RedSalud\"><option value=\"UC Christus\"><option value=\"Clínica Bupa Santiago\"><option value=\"Clínica Meds\"><option value=\"Clínica Tabancura\"><option value=\"Clínica Vespucio\"><option value=\"Integramédica\"></datalist>\n      <p class=\"ayuda-clinica\">Te decimos si este plan te cubre en esa clínica.</p>\n      <input type=\"text\" id=\"leadWeb\" class=\"hp\" tabindex=\"-1\" autocomplete=\"off\" aria-hidden=\"true\">\n      <p class=\"falta-poco\" id=\"faltaPoco\" hidden style=\"cursor:pointer;font-weight:600;text-align:center;background:#FFF4CF;color:var(--tinta);border-radius:10px;padding:10px 14px;font-size:14px;line-height:1.4;margin:16px 0 0\">Solo falta pedir tu informe gratis ↓</p>\n      <div style=\"margin-top:16px\"><button type=\"submit\" class=\"btn btn-verde btn-pedir\">Pedir mi informe gratis</button></div>\n      <p class=\"mini-nota\">Una persona del Equipo SimulaTuIsapre revisa tu informe antes de enviártelo.</p>\n      <p class=\"priv\">Al pedir tu informe, aceptas nuestra <a href=\"/privacidad.html\">política de privacidad</a>.</p>\n      </div>\n    </form>\n    <div class=\"lead-form\" id=\"leadDone\" hidden>\n      <h3 id=\"doneTitulo\">¡Listo!</h3>\n      <p class=\"sub-f\">Este es el folio de tu solicitud:</p>\n      <div class=\"folio-box\" id=\"doneFolio\"></div>\n      <p class=\"done-txt\" id=\"doneCuando\"></p>\n      <button type=\"button\" class=\"btn btn-verde\" onclick=\"enviarWhatsApp()\">¿No se envió? Reintentar por WhatsApp</button>\n      <button type=\"button\" class=\"btn-link\" onclick=\"volverASimular()\">← Volver a simular</button>\n    </div>\n  </div>\n</section>",
  "cookies": "<div class=\"cookies\" id=\"avisoCookies\" hidden role=\"region\" aria-label=\"Aviso de cookies\">\n  <span>Usamos cookies para medir nuestros anuncios. <a href=\"/privacidad.html#cookies\">Más info</a></span>\n  <span><button type=\"button\" class=\"ck-no\" id=\"ckNo\">Rechazar</button> <button type=\"button\" class=\"ck-si\" id=\"ckSi\">Aceptar</button></span>\n</div>"
 };
 document.querySelectorAll('[data-sti]').forEach(el=>{ if(STI_PIEZAS[el.dataset.sti]) el.outerHTML = STI_PIEZAS[el.dataset.sti]; });
@@ -254,6 +254,9 @@ function calcular(){
   // Los 3 primeros: el mejor plan de 3 isapres distintas (mismo orden por puntaje, sin favorecer a ninguna).
   // Después siguen los demás planes en su orden normal ("Ver más").
   const orden = lista.sort((a,b)=>b.score-a.score), primeros = [], vistas = new Set();
+  // Si la prioridad es libre elección, los 3 primeros deben ser de libre elección (si existen); si faltan, se completa con el resto
+  const calzaPrio = p => estado.prio !== 'libre' || p.m === 'L';
+  for(const p of orden){ if(primeros.length===3) break; if(calzaPrio(p) && !vistas.has(p.i)){ vistas.add(p.i); primeros.push(p); } }
   for(const p of orden){ if(primeros.length===3) break; if(!vistas.has(p.i)){ vistas.add(p.i); primeros.push(p); } }
   ranking = [...primeros, ...orden.filter(p=>!primeros.includes(p))];
   mostrados = 3; planInteres = null; $('#planSel').hidden = true;
@@ -280,7 +283,7 @@ function render(){
     const t = document.createElement('article');
     t.className = 'ticket' + (ix===0?' destacado':'');
     t.innerHTML = `
-      ${ix===0?'<div class="badge-top">Mejor calce para ti</div>':''}
+      ${ix===0?'<div class="badge-top">★ Tu mejor plan<span style="display:block;font-weight:500;font-size:12.5px;margin-top:2px">Según tu prioridad: '+PRIO[estado.prio].toLowerCase()+'</span></div>':''}
       <div class="tk-head">
         <div class="tk-isapre">${p.i}</div>
         <div class="tk-plan">${p.n}</div>
@@ -300,7 +303,7 @@ function render(){
         <div class="d"><b>${modalidad(p)}</b><span>modalidad</span></div>
       </div>
       ${p.z>20 ? `<div class="tk-social"><b>${p.z.toLocaleString('es-CL')} personas</b> tienen este plan hoy (dato oficial)</div>`:''}
-      <div class="tk-cta"><button class="btn btn-verde" onclick="pedirInforme(${ix})">Me interesa este plan</button></div>`;
+      <div class="tk-cta"><button class="btn btn-verde" onclick="pedirInforme(${ix})">Pedir informe gratis de este plan</button><p class="tk-nota" style="font-size:13px;line-height:1.4;color:var(--gris);margin:8px 0 0;text-align:center">Te confirmamos si sigue disponible y en qué clínicas te cubre.</p></div>`;
     w.appendChild(t);
   });
   $('#verMas').style.display = mostrados < ranking.length ? 'inline-flex' : 'none';
@@ -320,10 +323,70 @@ function pedirInforme(ix){
   $('#leadForm').hidden = false; $('#leadDone').hidden = true;
   $('#asesoria').scrollIntoView({behavior:'smooth'});
   $('#leadNombre').focus({preventScroll:true});
+  esperarFaltaPoco();
 }
+
+/* Avisos "Falta…": cuentan el tiempo SIN escribir (cada tecla reinicia la cuenta, nunca interrumpe a quien escribe).
+   12 s al abrir el formulario · 10 s si falta nombre o WhatsApp · 8 s si solo falta pinchar el botón.
+   Al tocar el aviso, lleva al dato que falta. Máximo 3 avisos. */
+let timerFaltaPoco = null, avisosFaltaPoco = 0;
+const FALTA = {
+  nombre: ['#leadNombre', 'Falta tu nombre'],
+  fono:   ['#leadFono',   'Falta tu WhatsApp'],
+  boton:  [null,          '']
+};
+function queFalta(){
+  if(!$('#leadNombre').value.trim()) return 'nombre';
+  if($('#leadFono').value.replace(/\D/g,'').length < 8) return 'fono';
+  return 'boton';
+}
+function limpiarFalta(){
+  document.querySelectorAll('.falta-campo').forEach(e=>e.remove());
+  ['#leadNombre','#leadFono'].forEach(sel=>{ const el=$(sel); el.style.borderColor=''; el.style.boxShadow=''; });
+  $('#faltaPoco').hidden = true;
+}
+document.addEventListener('click', e=>{ if(e.target.closest && e.target.closest('#faltaPoco')){ const b=document.querySelector('#leadForm .btn-pedir'); b.scrollIntoView({behavior:'smooth', block:'center'}); setTimeout(()=>b.focus({preventScroll:true}),350); } });
+function irAlCampo(sel){ const el=$(sel); el.scrollIntoView({behavior:'smooth', block:'center'}); setTimeout(()=>el.focus({preventScroll:true}), 350); }
+function marcarFalta(cual, llevar){
+  limpiarFalta();
+  const [sel, txt] = FALTA[cual];
+  if(sel){
+    const el = $(sel);
+    el.style.borderColor = '#FFC83D'; el.style.boxShadow = '0 0 0 3px rgba(255,200,61,.45)';
+    const m = document.createElement('p');
+    m.className = 'falta-campo'; m.setAttribute('role','alert'); m.textContent = txt;
+    m.style.cssText = 'background:#FFF4CF;color:var(--tinta);border-radius:8px;padding:8px 12px;font-size:14px;font-weight:600;margin:6px 0 0;cursor:pointer';
+    m.addEventListener('click', ()=>irAlCampo(sel));
+    el.insertAdjacentElement('afterend', m);
+    if(llevar) irAlCampo(sel);
+  } else {
+    $('#faltaPoco').hidden = false;
+  }
+  marca('falta_' + cual);
+}
+function esperarFaltaPoco(){
+  clearTimeout(timerFaltaPoco);
+  if(avisosFaltaPoco >= 3) return;
+  const f = queFalta(), recienAbierto = !$('#leadNombre').value && !$('#leadFono').value;
+  const espera = recienAbierto ? 12000 : (f === 'boton' ? 8000 : 10000);
+  timerFaltaPoco = setTimeout(()=>{
+    if(!$('#leadForm').hidden && $('#leadDone').hidden && $('#leadCampos') && !$('#leadCampos').hidden){
+      avisosFaltaPoco++; marcarFalta(queFalta(), false);
+    }
+  }, espera);
+}
+['#leadNombre','#leadFono','#leadMail','#leadClinica'].forEach(sel=>{
+  $(sel).addEventListener('input', ()=>{
+    const f = queFalta();
+    const campo = document.querySelector('.falta-campo');
+    if(campo && FALTA[f][0] !== '#' + campo.previousElementSibling.id) limpiarFalta();   // ya llenó el dato que faltaba
+    if(planInteres) esperarFaltaPoco();
+  });
+});
 function mostrarPlanSel(){
   const p = planInteres; if(!p) return;
-  $('#planSel').innerHTML = `Plan seleccionado<b>${p.i} — ${p.n}</b>${fmt(p.clp)} al mes aprox. · ${p.clp < siete() ? `cabe en tu 7%: pagas ${fmt(siete())} y la diferencia mejora tu plan` : p.dentro ? 'cabe en tu 7%' : 'requiere adicional de ' + fmt(p.clp - siete())}`;
+  const esMejor = p === ranking[0];
+  $('#planSel').innerHTML = `${esMejor ? '<span style="display:inline-block;background:#FFC83D;color:#0B2545;font-weight:700;font-size:12.5px;padding:3px 10px;border-radius:999px;margin-bottom:6px">★ Tu mejor plan</span>' : 'Plan que elegiste'}<b>${p.i} — ${p.n}</b>${fmt(p.clp)} al mes aprox. · ${p.clp < siete() ? `cabe en tu 7%: pagas ${fmt(siete())} y la diferencia mejora tu plan` : p.dentro ? 'cabe en tu 7%' : 'requiere adicional de ' + fmt(p.clp - siete())}`;
   $('#planSel').hidden = false;
 }
 
@@ -396,12 +459,13 @@ function activarClarity(){
 }
 /* Marca en qué paso va la persona (para filtrar grabaciones en Clarity). Sin datos personales. */
 function marca(nombre){ try{ if(window.clarity) clarity('event', nombre); }catch(e){} enviarEtiquetas(); }
-/* Lo que la persona elige en el simulador, para verlo en Clarity. NUNCA la renta, el nombre ni el WhatsApp. */
+/* Lo que la persona ingresa y elige en el simulador, para verlo en Clarity. NUNCA el nombre ni el WhatsApp. */
 let pasoMax = 1;
 function enviarEtiquetas(){
   try{
     if(!window.clarity) return;
     const t = {folio: FOLIO, paso_maximo: String(pasoMax)};
+    if(pasoMax >= 2 && estado.renta){ t.renta = String(estado.renta); t.siete = String(Math.round(siete())); }
     if(pasoMax >= 3 && estado.edadTit){
       const g = grupo();
       t.edades = g.map(p=> p.rol==='Titular' ? `titular ${p.edad}` : `${p.rol.toLowerCase()} ${p.edad}`).join('; ');
@@ -482,7 +546,7 @@ function cuandoRespondemos(){
   const p = new Intl.DateTimeFormat('es-CL',{weekday:'short',hour:'numeric',hour12:false,timeZone:'America/Santiago'}).formatToParts(new Date());
   const dia = p.find(x=>x.type==='weekday').value.toLowerCase(), hora = +p.find(x=>x.type==='hour').value;
   const habil = !/^(sáb|dom)/.test(dia);
-  return habil && hora>=9 && hora<17 ? 'Te respondemos hoy mismo por WhatsApp.' : 'Te respondemos por WhatsApp el próximo día hábil.';
+  return habil && hora>=9 && hora<17 ? 'Te respondemos por WhatsApp en menos de una hora.' : 'Te respondemos por WhatsApp el próximo día hábil.';
 }
 function volverASimular(){
   $('#leadDone').hidden = true; $('#leadForm').hidden = false;
@@ -498,7 +562,8 @@ $('#leadForm').addEventListener('submit', e=>{
   e.preventDefault();
   if(!ranking.length){ $('#simulador').scrollIntoView({behavior:'smooth'}); return; }
   const nombre = $('#leadNombre').value.trim(), fono = $('#leadFono').value.trim(), mail = $('#leadMail').value.trim();
-  if(!nombre || fono.replace(/\D/g,'').length < 8){ alert('Revisa tu nombre y número de WhatsApp.'); return; }
+  if(!nombre || fono.replace(/\D/g,'').length < 8){ marcarFalta(!nombre ? 'nombre' : 'fono', true); return; }
+  clearTimeout(timerFaltaPoco); limpiarFalta();
   ultimoNombre = nombre;
   ultimoMensaje = armarMensaje(nombre);
   guardarLead(datosLead(nombre, fono, mail));
@@ -511,6 +576,6 @@ $('#leadForm').addEventListener('submit', e=>{
   enviarWhatsApp();
   $('#doneTitulo').textContent = `¡Listo, ${nombre.split(' ')[0]}!`;
   $('#doneFolio').textContent = FOLIO;
-  $('#doneCuando').textContent = cuandoRespondemos() + ' Guarda tu folio por si necesitas consultarnos.';
+  $('#doneCuando').textContent = cuandoRespondemos() + ' Si tienes alguna pregunta, escríbela en el mismo WhatsApp.';
   $('#leadForm').hidden = true; $('#leadDone').hidden = false;
 });
