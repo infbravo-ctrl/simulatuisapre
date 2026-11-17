@@ -175,7 +175,13 @@ const ORIGEN = (()=>{
     const utm = [q.get('utm_source'), q.get('utm_campaign')].filter(Boolean).join(' / ');
     let ref = ''; try{ ref = document.referrer ? new URL(document.referrer).hostname.replace(/^www\./,'') : ''; }catch(e){}
     if(ref.endsWith('simulatuisapre.cl')) ref = '';
-    llegada = utm ? 'campaña: ' + utm : ref ? 'desde ' + ref : 'directo';
+    // Links antiguos sin código: se reconoce la red por la dirección de origen o por la app desde donde se abrió
+    const ua = navigator.userAgent || '';
+    let red = '';
+    if(/(^|\.)(linkedin\.com|lnkd\.in)$/.test(ref) || /LinkedInApp/i.test(ua)) red = 'linkedin';
+    else if(/Instagram/i.test(ua) || /(^|\.)instagram\.com$/.test(ref)) red = 'instagram';
+    else if(/FBAN|FBAV|FB_IAB/i.test(ua) || /(^|\.)(facebook\.com|fb\.com)$/.test(ref)) red = 'facebook';
+    llegada = utm ? 'campaña: ' + utm : red ? 'red: ' + red + ' (link sin código)' : ref ? 'desde ' + ref : 'directo';
     try{ sessionStorage.setItem('sti_llegada', llegada); }catch(e){}
   }
   return `${pagina} · ${llegada}`;
