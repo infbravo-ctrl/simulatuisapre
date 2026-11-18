@@ -278,6 +278,21 @@ h1 em{font-style:normal}
 .m-card a{display:inline-block;margin-top:10px;font-size:14.5px;font-weight:700}
 @media(max-width:1000px){.metodo-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:600px){.metodo{padding:48px 18px 40px}.metodo-grid{grid-template-columns:1fr}}
+
+/* Celular: el simulador primero (18-11-2026) */
+.h-conf{display:none}
+@media(max-width:900px){
+ .hero{grid-template-areas:"txt" "sim" "conf" "mapa"!important;gap:14px!important}
+ .h-txt .dato,.h-txt .puntos,.h-txt .migas{display:none}
+ .h-conf{display:block;grid-area:conf}
+ .h-conf .puntos{margin-top:0}
+ .h-conf .dato{margin-top:12px}
+ .h-sim .ayuda{display:none}
+}
+@media(max-width:600px){
+ .cookies{padding:8px 12px!important;font-size:12.5px!important;gap:8px!important}
+ .cookies button{padding:6px 10px!important;font-size:12.5px!important}
+}
 </style>
 </head>
 <body>
@@ -297,19 +312,25 @@ h1 em{font-style:normal}
 <section class="hero envoltura">
   <div class="h-txt">
     <p class="dato">Fuente de datos: Superintendencia de Salud · planes en venta a <b class="periodo-dyn">septiembre 2026</b> · <a href="https://www.superdesalud.gob.cl/tax-biblioteca-digital/datos-abiertos-de-isapres-6988/" target="_blank" rel="noopener">verificar origen ↗</a></p>
-    <h1>Los <em id="nPlanes">2.621</em> planes de isapre en venta hoy, comparados con tu <mark>sueldo real</mark>.</h1>
-    <p class="sub">Ingresa tu renta y te mostramos al tiro qué planes puedes pagar con tu 7%, con la información oficial de cada isapre.</p>
+    <h1>¿Qué <mark>plan de isapre</mark> puedes tener?</h1>
+    <p class="sub">Compara las isapres con tu sueldo real.</p>
     <ul class="puntos">
-      <li>Datos oficiales</li>
+      <li>Datos oficiales de la Superintendencia</li>
       <li>Informe gratis por WhatsApp o correo</li>
-      <li>Precio total, con GES incluido</li>
-      <li>Las 7 isapres abiertas</li>
+      <li>Respuesta el mismo día hábil</li>
+      <li>Independiente: no trabajamos para ninguna isapre</li>
     </ul>
   </div>
   <div class="h-sim">
     <!-- Simulador: lo dibuja /simulador.js (el mismo archivo para todo el sitio) -->
     <div data-sti="ficha"></div>
   </div>
+  <div class="h-conf"><ul class="puntos">
+      <li>Datos oficiales de la Superintendencia</li>
+      <li>Informe gratis por WhatsApp o correo</li>
+      <li>Respuesta el mismo día hábil</li>
+      <li>Independiente: no trabajamos para ninguna isapre</li>
+    </ul><p class="dato">Fuente de datos: Superintendencia de Salud · planes en venta a <b class="periodo-dyn">septiembre 2026</b> · <a href="https://www.superdesalud.gob.cl/tax-biblioteca-digital/datos-abiertos-de-isapres-6988/" target="_blank" rel="noopener">verificar origen ↗</a></p></div>
   <aside class="h-mapa" aria-label="Tu región">
     <button type="button" class="alcance" id="alcance" data-ir="simular">
       <small>Alcance de tu 7%</small>
