@@ -69,10 +69,15 @@ nav.menu a:hover{text-decoration:underline;text-underline-offset:4px}
 @media(max-width:520px){header.top{flex-wrap:nowrap;gap:8px}.logo{font-size:17px;gap:6px;flex:none}.logo svg{width:28px;height:21px}.uf-hoy{font-size:10.5px;white-space:nowrap;margin-left:auto;line-height:1.4}}
 
 /* Portada de la página */
-.hero{display:grid;grid-template-columns:minmax(0,1fr);grid-template-areas:"txt" "sim";gap:22px;padding-top:14px;padding-bottom:10px;align-items:start}
+.hero{display:grid;grid-template-columns:minmax(0,1fr) 300px;grid-template-areas:"txt txt" "sim guia";gap:22px 48px;padding-top:14px;padding-bottom:10px;align-items:start}
 .h-txt,.h-sim{max-width:760px}
-.h-txt{grid-area:txt}.h-sim{grid-area:sim}
-@media(max-width:900px){.hero{grid-template-columns:1fr;grid-template-areas:"txt" "sim";gap:22px}}
+.h-txt{grid-area:txt}.h-sim{grid-area:sim}.h-guia{grid-area:guia}
+.h-guia h2{margin:0;font-size:12.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--gris)}
+.h-guia ol{list-style:none;margin:14px 0 0;padding:0;display:flex;flex-direction:column;gap:12px}
+.h-guia li{display:flex;align-items:center;gap:11px;font-size:15px;color:var(--txt2)}
+.h-guia li b{flex:none;width:21px;height:21px;border-radius:50%;background:var(--cielo);color:var(--tinta);font-size:11.5px;font-weight:700;display:inline-flex;align-items:center;justify-content:center}
+.h-guia .dato{margin:22px 0 0;padding-top:18px;border-top:1px solid var(--linea)}
+@media(max-width:900px){.hero{grid-template-columns:1fr;grid-template-areas:"txt" "sim";gap:22px}.h-guia{display:none}}
 .migas{font-size:13px;color:var(--gris);margin-bottom:10px}.migas a{color:var(--gris)}
 .dato{font-size:13px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--gris);line-height:1.5}
 .dato a{color:var(--gris)}
@@ -99,8 +104,8 @@ nav.menu a:hover{text-decoration:underline;text-underline-offset:4px}
 .alcance .grande mark{padding:0 .15em}
 
 /* Simulador (archivo compartido): solo se le cambia la apariencia en esta página */
-.ficha{border:0;box-shadow:0 14px 34px -16px rgba(11,37,69,.4);transition:transform .2s ease, box-shadow .2s ease}
-.ficha:hover,.ficha:focus-within,.ficha.atencion{transform:translateY(-3px);box-shadow:0 0 0 3px var(--sol),0 20px 44px -18px rgba(11,37,69,.45)}
+.ficha{border:0;box-shadow:0 14px 34px -16px rgba(11,37,69,.4);transition:box-shadow .2s ease}
+.ficha.atencion{box-shadow:0 0 0 3px var(--sol),0 20px 44px -18px rgba(11,37,69,.45)}
 .ficha-head{background:var(--tinta)}
 .ficha-head .folio{color:var(--sol);font-weight:600}
 .aviso-informe{background:var(--sello-bg)!important;border-bottom-color:#F1DFA6!important}
@@ -295,7 +300,6 @@ h1 em{font-style:normal}
 
 <section class="hero envoltura">
   <div class="h-txt">
-    <p class="dato">Fuente de datos: Superintendencia de Salud · planes en venta a <b class="periodo-dyn">septiembre 2026</b> · <a href="https://www.superdesalud.gob.cl/tax-biblioteca-digital/datos-abiertos-de-isapres-6988/" target="_blank" rel="noopener">verificar origen ↗</a></p>
     <h1>¿Qué <mark>plan de isapre</mark> puedes tener?</h1>
     <p class="sub">Revisamos los <b class="total-dyn">2.621</b> planes en venta hoy y te mostramos los 3 que te sirven.</p>
     <ul class="puntos">
@@ -309,6 +313,16 @@ h1 em{font-style:normal}
     <!-- Simulador: lo dibuja /simulador.js (el mismo archivo para todo el sitio) -->
     <div data-sti="ficha"></div>
   </div>
+  <aside class="h-guia" aria-label="Lo que te preguntamos">
+    <h2>Lo que te preguntamos</h2>
+    <ol>
+      <li><b>1</b> Tu sueldo</li>
+      <li><b>2</b> Tu edad y tus cargas</li>
+      <li><b>3</b> Tu región</li>
+      <li><b>4</b> Qué te importa más</li>
+    </ol>
+    <p class="dato">Fuente de datos: Superintendencia de Salud · planes en venta a <b class="periodo-dyn">septiembre 2026</b> · <a href="https://www.superdesalud.gob.cl/tax-biblioteca-digital/datos-abiertos-de-isapres-6988/" target="_blank" rel="noopener">verificar origen ↗</a></p>
+  </aside>
   <div class="h-conf"><ul class="puntos">
       <li>Datos oficiales de la Superintendencia</li>
       <li>Informe gratis por WhatsApp o correo</li>
